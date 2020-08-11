@@ -1,0 +1,22 @@
+language: node_js
+
+node_js:
+  - 14
+env:
+  global:
+    CC_TEST_REPORTER_ID=4dd6c348f4dc3bd263862d89f216ee53711fd433a0cdc74e99d21613c8fc91bc
+before_install:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+
+install:
+  - npm install
+  
+script:
+  - npm test
+
+notification:
+  - email: false
+
+after_success:
+  - npm run coverage
