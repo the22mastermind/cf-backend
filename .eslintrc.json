@@ -11,5 +11,24 @@
         "sourceType": "module"
     },
     "rules": {
-    }
+        "no-extra-semi": "off",
+        "no-shadow": [
+            "error",
+            {
+                "allow": [
+                    "user"
+                ]
+            }
+        ],
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "Sequelize"
+            }
+        ],
+        "no-undef": "off",
+        "arrow-parens": "off",
+        "function-paren-newline": "off"
+    },
+    "parser": "babel-eslint"
 }
