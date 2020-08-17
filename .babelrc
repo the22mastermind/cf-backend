@@ -6,15 +6,5 @@
           "node": "14"
         }
       }]
-  ],
-  "plugins": [
-    ["@babel/plugin-syntax-class-properties"],
-    "istanbul",
-    [
-      "@babel/plugin-transform-runtime",
-      {
-        "regenerator": true
-      }
-    ]
   ]
 }

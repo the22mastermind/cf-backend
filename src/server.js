@@ -4,7 +4,6 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import morgan from 'morgan';
 import dotenv from 'dotenv';
-import routes from './routes/index';
 
 dotenv.config();
 
@@ -16,14 +15,12 @@ app.use(morgan('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(routes);
-
 app.use((req, res) => {
   res.status(404).json({ error: 'Route not found' });
 });
 
 const server = app.listen(port, () => {
-  console.log(`Live at ${server.address().port}`);
+  console.log(`Listening on port ${server.address().port}`);
 });
 
 export default app;
