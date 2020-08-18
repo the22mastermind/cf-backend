@@ -28,7 +28,7 @@ const returnErrorMessages = (errors, res, next) => {
 };
 
 const generateOTP = async () => {
-  const otp = Math.floor(100000 + Math.random() * 900000);
+  const otp = Math.floor(100000 + (Math.random() * 900000));
   return otp;
 };
 
