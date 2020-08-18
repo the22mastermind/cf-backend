@@ -1,4 +1,7 @@
+import dotenv from 'dotenv';
 import userRoles from '../../src/utils/userRoles';
+
+dotenv.config();
 
 const authSample = {
   emptySignupFirstName: {
@@ -35,7 +38,7 @@ const authSample = {
     firstName: 'John',
     lastName: 'doe',
     email: 'johndoe@gmail.com',
-    phone: '+250787771001',
+    phone: process.env.OTP_TO_NUMBER,
   },
   adminSignup: {
     firstName: 'John',

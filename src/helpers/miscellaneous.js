@@ -1,8 +1,11 @@
+/* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
 import statusCodes from '../utils/statusCodes';
 import responseHandler from './responseHandler';
+import twilioClient from '../config/twilioConfig';
 
 const { errorResponse } = responseHandler;
+const { client } = twilioClient;
 
 const createToken = async (data) => {
   const token = jwt.sign(
@@ -24,7 +27,22 @@ const returnErrorMessages = (errors, res, next) => {
   return next();
 };
 
+const generateOTP = async () => {
+  const otp = Math.floor(100000 + Math.random() * 900000);
+  return otp;
+};
+
+const sendOTP = async (phone, text) => {
+  await client.messages.create({
+    body: text,
+    from: process.env.TW_FROM_NUMBER,
+    to: phone,
+  });
+};
+
 export default {
   createToken,
   returnErrorMessages,
+  generateOTP,
+  sendOTP,
 };
