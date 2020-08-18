@@ -47,6 +47,15 @@ const authSample = {
     phone: '+250787771000',
     role: userRoles.ADMIN,
   },
+  emptyUpdateBody: {},
+  invalidUpdateBody: {
+    password: 'helloworld',
+    address: '100',
+  },
+  validUpdateBody: {
+    password: 'hello@1love',
+    address: 'Kacyiru, KG 574 St, 33',
+  },
 };
 
 export default authSample;
