@@ -20,6 +20,8 @@ const messages = {
   userNotVerified: 'Account not verified! Please verify your account first',
   invalidOTP: 'Please provide a valid OTP',
   invalidProfileComplete: 'Cannot process your request',
+  inValidLoginCreds: 'Invalid login credentials',
+  validLoginCreds: 'Login successful',
 };
 
 export default messages;

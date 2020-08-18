@@ -56,6 +56,26 @@ const authSample = {
     password: 'hello@1love',
     address: 'Kacyiru, KG 574 St, 33',
   },
+  emptyLoginEmail: {
+    email: '',
+    password: '',
+  },
+  emptyLoginPhone: {
+    phone: '',
+    password: '',
+  },
+  validLoginEmail: {
+    email: 'johndoe@gmail.com',
+    password: 'hello@1love',
+  },
+  validLoginPhone: {
+    phone: '+250787771001',
+    password: 'hello@1love',
+  },
+  inValidLoginCreds: {
+    phone: '+250787771001',
+    password: 'hello@1world',
+  },
 };
 
 export default authSample;
