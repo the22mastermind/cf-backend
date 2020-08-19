@@ -52,7 +52,7 @@ const profileUpdate = async (req, res, next) => {
     req.updateData = { profileComplete: true };
     return next();
   }
-  errorResponse(res, statusCodes.badRequest, messages.invalidUpdateBody);
+  return errorResponse(res, statusCodes.badRequest, messages.invalidUpdateBody);
 };
 
 const checkTokenAndUser = async (req, res, next) => {
