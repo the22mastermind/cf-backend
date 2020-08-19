@@ -14,6 +14,12 @@ const messages = {
   invalidAddress: 'Please provide a valid address with neighborhood name, street number, and house number. eg. Kacyiru, KG 574 St, 20',
   invalidUpdateBody: 'Please provide at least one value to update',
   validProfileUpdate: 'Profile updated successfully',
+  profileUpdateCompleted: 'Profile set up completed successfully',
+  absentToken: 'Cannot process your request! Please make sure you are logged in and try again',
+  invalidToken: 'Invalid token! Please make sure you are logged in and try again',
+  userNotVerified: 'Account not verified! Please verify your account first',
+  invalidOTP: 'Please provide a valid OTP',
+  invalidProfileComplete: 'Cannot process your request',
 };
 
 export default messages;

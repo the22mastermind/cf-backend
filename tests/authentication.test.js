@@ -10,6 +10,7 @@ const {
   conflict,
   created,
   success,
+  unauthorized,
 } = statusCodes;
 const baseUrl = '/auth';
 
@@ -141,13 +142,36 @@ describe('USER UPDATE PROFILE', () => {
     chai
       .request(server)
       .patch(`${baseUrl}/profile`)
-      .send(sample.adminSignup.phone)
+      .send(
+        {
+          address: sample.validUpdateBody.address,
+        },
+      )
       .end((err, res) => {
         if (err) done(err);
         const { error } = res.body;
         expect(res.status).to.equal(badRequest);
         expect(error);
-        expect(error).to.equal(messages.userNotFound);
+        expect(error).to.equal(messages.absentToken);
+        done();
+      });
+  });
+  it('Updating user profile with invalid token should return 400', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/profile`)
+      .set('Authorization', `Bearer ${userToken}===`)
+      .send(
+        {
+          address: sample.validUpdateBody.address,
+        },
+      )
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidToken);
         done();
       });
   });
@@ -156,7 +180,11 @@ describe('USER UPDATE PROFILE', () => {
       .request(server)
       .patch(`${baseUrl}/profile`)
       .set('Authorization', `Bearer ${userToken}`)
-      .send(sample.invalidUpdateBody.password)
+      .send(
+        {
+          password: sample.invalidUpdateBody.password,
+        },
+      )
       .end((err, res) => {
         if (err) done(err);
         const { error } = res.body;
@@ -171,7 +199,11 @@ describe('USER UPDATE PROFILE', () => {
       .request(server)
       .patch(`${baseUrl}/profile`)
       .set('Authorization', `Bearer ${userToken}`)
-      .send(sample.invalidUpdateBody.address)
+      .send(
+        {
+          address: sample.invalidUpdateBody.address,
+        },
+      )
       .end((err, res) => {
         if (err) done(err);
         const { error } = res.body;
@@ -196,18 +228,93 @@ describe('USER UPDATE PROFILE', () => {
         done();
       });
   });
-  it('Valid update body should return 200', (done) => {
+  it('Update of password for unverified user should return 401', (done) => {
     chai
       .request(server)
       .patch(`${baseUrl}/profile`)
       .set('Authorization', `Bearer ${userToken}`)
-      .send(sample.validUpdateBody.password)
+      .send(
+        {
+          password: sample.validUpdateBody.password,
+        },
+      )
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.userNotVerified);
+        done();
+      });
+  });
+  it('Verify user should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/profile`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ valid: 'true' })
       .end((err, res) => {
         if (err) done(err);
         const { message } = res.body;
         expect(res.status).to.equal(success);
         expect(message);
         expect(message).to.equal(messages.validProfileUpdate);
+        done();
+      });
+  });
+  it('Valid update of password should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/profile`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(
+        {
+          password: sample.validUpdateBody.password,
+        },
+      )
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validProfileUpdate);
+        expect(data);
+        done();
+      });
+  });
+  it('Valid update of address should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/profile`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(
+        {
+          address: sample.validUpdateBody.address,
+        },
+      )
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validProfileUpdate);
+        expect(data);
+        expect(data).to.haveOwnProperty('address');
+        done();
+      });
+  });
+  it('User profile setup complete should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/profile`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ profileComplete: 'true' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.profileUpdateCompleted);
         done();
       });
   });

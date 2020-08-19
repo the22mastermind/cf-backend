@@ -62,6 +62,18 @@ export default (sequelize, DataTypes) => {
         notEmpty: true,
       },
     },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+    },
+    address: {
+      type: DataTypes.STRING,
+    },
+    subscription: {
+      type: DataTypes.STRING,
+    },
+    subscriptionExpires: {
+      type: DataTypes.STRING,
+    },
   });
   return user;
 };

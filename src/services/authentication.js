@@ -17,6 +17,13 @@ const saveData = async (data) => {
   return savedData.dataValues;
 };
 
+const updateProfile = async (data, condition) => {
+  const profile = await user.update(data, { where: condition, returning: true, plain: true });
+  // console.log('>>>>>> UPDATED USER: ', profile[1].dataValues);
+  return profile[1];
+};
+
 export default {
   saveData,
+  updateProfile,
 };
