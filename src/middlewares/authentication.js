@@ -7,12 +7,13 @@ import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 
 const { user } = models;
-const { signupValidation, updateProfileValidation } = validations;
+const { payloadValidator } = validations;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
 
-const handleSignupValidation = async (req, res, next) => {
-  const { error } = signupValidation(req.body);
+const handleValidation = async (req, res, next) => {
+  const type = req.path.split('/').pop();
+  const { error } = payloadValidator(req.body, type);
   returnErrorMessages(error, res, next);
 };
 
@@ -51,7 +52,7 @@ const profileUpdate = async (req, res, next) => {
     req.updateData = { profileComplete: true };
     return next();
   }
-  return errorResponse(res, statusCodes.badRequest, messages.invalidUpdateBody);
+  errorResponse(res, statusCodes.badRequest, messages.invalidUpdateBody);
 };
 
 const checkTokenAndUser = async (req, res, next) => {
@@ -74,15 +75,9 @@ const checkTokenAndUser = async (req, res, next) => {
   }
 };
 
-const handleUpdateProfileValidation = async (req, res, next) => {
-  const { error } = updateProfileValidation(req.body);
-  returnErrorMessages(error, res, next);
-};
-
 export default {
-  handleSignupValidation,
+  handleValidation,
   userExists,
   profileUpdate,
   checkTokenAndUser,
-  handleUpdateProfileValidation,
 };

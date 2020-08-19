@@ -4,15 +4,14 @@ import authMiddleware from '../middlewares/authentication';
 
 const { userSignUp, userUpdateProfile } = authentication;
 const {
-  handleSignupValidation,
+  handleValidation,
   userExists,
   profileUpdate,
   checkTokenAndUser,
-  handleUpdateProfileValidation,
 } = authMiddleware;
 const authenticationRoutes = express.Router();
 
-authenticationRoutes.post('/signup', handleSignupValidation, userExists, userSignUp);
-authenticationRoutes.patch('/profile', handleUpdateProfileValidation, profileUpdate, checkTokenAndUser, userUpdateProfile);
+authenticationRoutes.post('/signup', handleValidation, userExists, userSignUp);
+authenticationRoutes.patch('/profile', handleValidation, profileUpdate, checkTokenAndUser, userUpdateProfile);
 
 export default authenticationRoutes;
