@@ -7,9 +7,9 @@ import userRoles from '../utils/userRoles';
 import authService from '../services/authentication';
 
 const { successResponse } = responseHandler;
-const { validSignup } = messages;
+const { validSignup, validProfileUpdate, profileUpdateCompleted } = messages;
 const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
-const { saveData } = authService;
+const { saveData, updateProfile } = authService;
 
 export default class Authentication {
   static userSignUp = async (req, res) => {
@@ -35,5 +35,20 @@ export default class Authentication {
     await sendOTP(phone, otpMessage);
     const userData = { ...data, otp };
     return successResponse(res, statusCodes.created, validSignup, token, userData);
+  };
+
+  static userUpdateProfile = async (req, res) => {
+    const condition = { id: req.userData.id };
+    if (req.updateData.isVerified) {
+      await updateProfile(req.updateData, condition);
+      return successResponse(res, statusCodes.success, validProfileUpdate, null, null);
+    }
+    if (req.updateData.profileComplete) {
+      await updateProfile(req.updateData, condition);
+      return successResponse(res, statusCodes.success, profileUpdateCompleted, null, null);
+    }
+    const { dataValues } = await updateProfile(req.updateData, condition);
+    const data = _.omit(dataValues, 'password');
+    return successResponse(res, statusCodes.success, validProfileUpdate, null, data);
   };
 };
