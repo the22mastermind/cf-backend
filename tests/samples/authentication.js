@@ -56,25 +56,25 @@ const authSample = {
     password: 'hello@1love',
     address: 'Kacyiru, KG 574 St, 33',
   },
-  emptyLoginEmail: {
-    email: '',
-    password: '',
-  },
-  emptyLoginPhone: {
-    phone: '',
+  emptyLoginCredentials: {
+    identifier: '',
     password: '',
   },
   validLoginEmail: {
-    email: 'johndoe@gmail.com',
+    identifier: 'johndoe@gmail.com',
     password: 'hello@1love',
   },
   validLoginPhone: {
-    phone: '+250787771001',
+    identifier: process.env.OTP_TO_NUMBER,
     password: 'hello@1love',
   },
   inValidLoginCreds: {
-    phone: '+250787771001',
-    password: 'hello@1world',
+    identifier: '0787771001',
+    password: 'hello world',
+  },
+  validLoginUnexistantUser: {
+    identifier: 'janedoe@gmail.com',
+    password: 'hellolove@1',
   },
 };
 

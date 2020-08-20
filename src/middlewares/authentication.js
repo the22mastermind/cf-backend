@@ -75,9 +75,26 @@ const checkTokenAndUser = async (req, res, next) => {
   }
 };
 
+const loginChecker = async (req, res, next) => {
+  const { identifier, password } = req.body;
+  let userProfile = await user.findOne({ where: { email: identifier, password } });
+  if (!userProfile) {
+    userProfile = await user.findOne({ where: { phone: identifier, password } });
+  }
+  if (!userProfile) {
+    return errorResponse(res, statusCodes.notFound, messages.loginUserNotFound);
+  }
+  if (!userProfile.dataValues.isVerified) {
+    return errorResponse(res, statusCodes.unauthorized, messages.loginUserNotVerified);
+  }
+  req.userData = userProfile.dataValues;
+  return next();
+};
+
 export default {
   handleValidation,
   userExists,
   profileUpdate,
   checkTokenAndUser,
+  loginChecker,
 };

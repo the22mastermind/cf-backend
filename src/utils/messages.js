@@ -20,8 +20,12 @@ const messages = {
   userNotVerified: 'Account not verified! Please verify your account first',
   invalidOTP: 'Please provide a valid OTP',
   invalidProfileComplete: 'Cannot process your request',
-  inValidLoginCreds: 'Invalid login credentials',
+  emptyLoginCreds: 'identifier is not allowed to be empty, password is not allowed to be empty',
+  invalidLoginCreds: 'Please provide a valid email. eg. example@domain.com or phone number. eg. +250787771001, Password must be between 6-15 characters, containing numbers and special characters. Spaces not allowed',
   validLoginCreds: 'Login successful',
+  loginUserNotFound: 'User not found. Please make sure you are registered and your account is verified',
+  invalidLoginEmailPhone: 'Please provide a valid email. eg. example@domain.com or phone number. eg. +250787771001',
+  loginUserNotVerified: 'You are almost there. Just verify your account first',
 };
 
 export default messages;

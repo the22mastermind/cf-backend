@@ -7,7 +7,12 @@ import userRoles from '../utils/userRoles';
 import authService from '../services/authentication';
 
 const { successResponse } = responseHandler;
-const { validSignup, validProfileUpdate, profileUpdateCompleted } = messages;
+const {
+  validSignup,
+  validProfileUpdate,
+  profileUpdateCompleted,
+  validLoginCreds,
+} = messages;
 const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
 const { saveData, updateProfile } = authService;
 
@@ -50,5 +55,11 @@ export default class Authentication {
     const { dataValues } = await updateProfile(req.updateData, condition);
     const data = _.omit(dataValues, 'password');
     return successResponse(res, statusCodes.success, validProfileUpdate, null, data);
+  };
+
+  static userLogin = async (req, res) => {
+    const userProfile = _.omit(req.userData, 'password');
+    const token = await createToken(userProfile);
+    return successResponse(res, statusCodes.success, validLoginCreds, token, userProfile);
   };
 };

@@ -319,3 +319,74 @@ describe('USER UPDATE PROFILE', () => {
       });
   });
 });
+
+describe('USER LOGIN', () => {
+  it('Empty Email/Password should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.emptyLoginCredentials)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.emptyLoginCreds);
+        done();
+      });
+  });
+  it('Invalid Password should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.inValidLoginCreds)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidLoginCreds);
+        done();
+      });
+  });
+  it('Valid Email Login should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.validLoginEmail)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('firstName');
+        done();
+      });
+  });
+  it('Valid Phone Login should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.validLoginPhone)
+      .end((err, res) => {
+        // console.log('1. #### ', res.body);
+        if (err) done(err);
+        const { message, token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        expect(data);
+        expect(data).to.be.a('object');
+        done();
+      });
+  });
+});
