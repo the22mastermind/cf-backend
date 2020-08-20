@@ -76,6 +76,18 @@ const authSample = {
     identifier: 'janedoe@gmail.com',
     password: 'hellolove@1',
   },
+  invalidCredentials: {
+    identifier: 'jonasbro@gmail.com',
+    password: 'hellolove@1',
+  },
+  loginUnverifiedUser: {
+    identifier: 'helloword@gmail.com',
+    password: 'hellowordl@0',
+  },
+  loginUserNotFound: {
+    identifier: 'notfound@gmail.com',
+    password: 'hellowordl@9',
+  },
 };
 
 export default authSample;

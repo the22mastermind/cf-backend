@@ -26,6 +26,7 @@ const messages = {
   loginUserNotFound: 'User not found. Please make sure you are registered and your account is verified',
   invalidLoginEmailPhone: 'Please provide a valid email. eg. example@domain.com or phone number. eg. +250787771001',
   loginUserNotVerified: 'You are almost there. Just verify your account first',
+  invalidCredentials: 'Invalid identifier or password. Please try again',
 };
 
 export default messages;

@@ -11,6 +11,7 @@ const {
   created,
   success,
   unauthorized,
+  notFound,
 } = statusCodes;
 const baseUrl = '/auth';
 
@@ -349,6 +350,48 @@ describe('USER LOGIN', () => {
         done();
       });
   });
+  it('Correct identifier but wrong password should return 401', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.invalidCredentials)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.invalidCredentials);
+        done();
+      });
+  });
+  it('Correct credentials but unverified user should return 401', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.loginUnverifiedUser)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotVerified);
+        done();
+      });
+  });
+  it('Unregistered user should return 404', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.loginUserNotFound)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotFound);
+        done();
+      });
+  });
   it('Valid Email Login should return 200', (done) => {
     chai
       .request(server)
@@ -375,7 +418,6 @@ describe('USER LOGIN', () => {
       .post(`${baseUrl}/login`)
       .send(sample.validLoginPhone)
       .end((err, res) => {
-        // console.log('1. #### ', res.body);
         if (err) done(err);
         const { message, token, data } = res.body;
         expect(res.status).to.equal(success);

@@ -46,10 +46,16 @@ const hashPassword = async (data) => {
   return hashedPassword;
 };
 
+const isPasswordValid = async (password, savedPassword) => {
+  const isValid = await bcrypt.compare(password, savedPassword);
+  return isValid;
+};
+
 export default {
   createToken,
   returnErrorMessages,
   generateOTP,
   sendOTP,
   hashPassword,
+  isPasswordValid,
 };

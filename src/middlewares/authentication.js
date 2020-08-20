@@ -8,7 +8,7 @@ import responseHandler from '../helpers/responseHandler';
 
 const { user } = models;
 const { payloadValidator } = validations;
-const { returnErrorMessages, hashPassword } = miscellaneousHelpers;
+const { returnErrorMessages, hashPassword, isPasswordValid } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
 
 const handleValidation = async (req, res, next) => {
@@ -32,16 +32,17 @@ const userExists = async (req, res, next) => {
 const profileUpdate = async (req, res, next) => {
   const {
     valid,
-    password,
     address,
     profileComplete,
   } = req.body;
+  let { password } = req.body;
   if (valid && JSON.parse(valid)) {
     req.updateData = { isVerified: true };
     return next();
   }
   if (password) {
-    req.updateData = { password: await hashPassword(password) };
+    password = await hashPassword(password);
+    req.updateData = { password };
     return next();
   }
   if (address) {
@@ -77,15 +78,20 @@ const checkTokenAndUser = async (req, res, next) => {
 
 const loginChecker = async (req, res, next) => {
   const { identifier, password } = req.body;
-  let userProfile = await user.findOne({ where: { email: identifier, password } });
+  let userProfile = await user.findOne({ where: { email: identifier } });
   if (!userProfile) {
-    userProfile = await user.findOne({ where: { phone: identifier, password } });
+    userProfile = await user.findOne({ where: { phone: identifier } });
   }
   if (!userProfile) {
     return errorResponse(res, statusCodes.notFound, messages.loginUserNotFound);
   }
   if (!userProfile.dataValues.isVerified) {
     return errorResponse(res, statusCodes.unauthorized, messages.loginUserNotVerified);
+  }
+  const hashedPassword = userProfile.dataValues.password;
+  const doesPasswordsMatch = await isPasswordValid(password, hashedPassword);
+  if (!doesPasswordsMatch) {
+    return errorResponse(res, statusCodes.unauthorized, messages.invalidCredentials);
   }
   req.userData = userProfile.dataValues;
   return next();
