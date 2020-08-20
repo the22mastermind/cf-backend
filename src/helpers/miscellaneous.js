@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 import statusCodes from '../utils/statusCodes';
 import responseHandler from './responseHandler';
 import twilioClient from '../config/twilioConfig';
@@ -40,9 +41,15 @@ const sendOTP = async (phone, text) => {
   });
 };
 
+const hashPassword = async (data) => {
+  const hashedPassword = await bcrypt.hash(data, 10);
+  return hashedPassword;
+};
+
 export default {
   createToken,
   returnErrorMessages,
   generateOTP,
   sendOTP,
+  hashPassword,
 };

@@ -8,7 +8,7 @@ import responseHandler from '../helpers/responseHandler';
 
 const { user } = models;
 const { payloadValidator } = validations;
-const { returnErrorMessages } = miscellaneousHelpers;
+const { returnErrorMessages, hashPassword } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
 
 const handleValidation = async (req, res, next) => {
@@ -41,7 +41,7 @@ const profileUpdate = async (req, res, next) => {
     return next();
   }
   if (password) {
-    req.updateData = { password };
+    req.updateData = { password: await hashPassword(password) };
     return next();
   }
   if (address) {
