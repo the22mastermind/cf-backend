@@ -11,6 +11,7 @@ const {
   created,
   success,
   unauthorized,
+  notFound,
 } = statusCodes;
 const baseUrl = '/auth';
 
@@ -315,6 +316,118 @@ describe('USER UPDATE PROFILE', () => {
         expect(res.status).to.equal(success);
         expect(message);
         expect(message).to.equal(messages.profileUpdateCompleted);
+        done();
+      });
+  });
+});
+
+describe('USER LOGIN', () => {
+  it('Empty Email/Password should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.emptyLoginCredentials)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.emptyLoginCreds);
+        done();
+      });
+  });
+  it('Invalid Password should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.inValidLoginCreds)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidLoginCreds);
+        done();
+      });
+  });
+  it('Correct identifier but wrong password should return 401', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.invalidCredentials)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.invalidCredentials);
+        done();
+      });
+  });
+  it('Correct credentials but unverified user should return 401', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.loginUnverifiedUser)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotVerified);
+        done();
+      });
+  });
+  it('Unregistered user should return 404', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.loginUserNotFound)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotFound);
+        done();
+      });
+  });
+  it('Valid Email Login should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.validLoginEmail)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('firstName');
+        done();
+      });
+  });
+  it('Valid Phone Login should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send(sample.validLoginPhone)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        expect(data);
+        expect(data).to.be.a('object');
         done();
       });
   });

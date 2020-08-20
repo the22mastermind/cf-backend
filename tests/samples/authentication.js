@@ -56,6 +56,38 @@ const authSample = {
     password: 'hello@1love',
     address: 'Kacyiru, KG 574 St, 33',
   },
+  emptyLoginCredentials: {
+    identifier: '',
+    password: '',
+  },
+  validLoginEmail: {
+    identifier: 'johndoe@gmail.com',
+    password: 'hello@1love',
+  },
+  validLoginPhone: {
+    identifier: process.env.OTP_TO_NUMBER,
+    password: 'hello@1love',
+  },
+  inValidLoginCreds: {
+    identifier: '0787771001',
+    password: 'hello world',
+  },
+  validLoginUnexistantUser: {
+    identifier: 'janedoe@gmail.com',
+    password: 'hellolove@1',
+  },
+  invalidCredentials: {
+    identifier: 'jonasbro@gmail.com',
+    password: 'hellolove@1',
+  },
+  loginUnverifiedUser: {
+    identifier: 'helloword@gmail.com',
+    password: 'hellowordl@0',
+  },
+  loginUserNotFound: {
+    identifier: 'notfound@gmail.com',
+    password: 'hellowordl@9',
+  },
 };
 
 export default authSample;

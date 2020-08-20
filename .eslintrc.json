@@ -28,7 +28,8 @@
         ],
         "no-undef": "off",
         "arrow-parens": "off",
-        "function-paren-newline": "off"
+        "function-paren-newline": "off",
+        "no-nested-ternary": "off"
     },
     "parser": "babel-eslint"
 }
