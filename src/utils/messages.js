@@ -8,6 +8,7 @@ const messages = {
   adminSignup: 'role is not allowed',
   validSignup: 'Signup successful',
   signupConflict: 'Signup failed! Email or phone number already registered',
+  otpMessage: 'is your ChowFood verification code',
 };
 
 export default messages;

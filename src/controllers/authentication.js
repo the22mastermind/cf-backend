@@ -8,7 +8,7 @@ import authService from '../services/authentication';
 
 const { successResponse } = responseHandler;
 const { validSignup } = messages;
-const { createToken } = miscellaneousHelpers;
+const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
 const { saveData } = authService;
 
 export default class Authentication {
@@ -30,6 +30,10 @@ export default class Authentication {
     const savedData = await saveData(newUser);
     const data = _.pick(savedData, 'id', 'firstName', 'phone');
     const token = await createToken(newUser);
-    return successResponse(res, statusCodes.created, validSignup, token, data);
+    const otp = await generateOTP();
+    const otpMessage = `${otp} ${messages.otpMessage}`;
+    await sendOTP(phone, otpMessage);
+    const userData = { ...data, otp };
+    return successResponse(res, statusCodes.created, validSignup, token, userData);
   };
 };
