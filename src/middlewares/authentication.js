@@ -66,9 +66,6 @@ const checkTokenAndUser = async (req, res, next) => {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { email } = decoded;
     const userData = await user.findOne({ where: { email } });
-    if (!req.updateData.isVerified && !userData.dataValues.isVerified) {
-      return errorResponse(res, statusCodes.unauthorized, messages.userNotVerified);
-    }
     req.userData = userData.dataValues;
     return next();
   } catch (error) {

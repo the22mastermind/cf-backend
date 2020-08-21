@@ -7,7 +7,7 @@ const messages = {
   invalidSignupPhone: 'Please provide a valid phone number. eg. +250787771001',
   adminSignup: 'role is not allowed',
   validSignup: 'Signup successful',
-  signupConflict: 'Signup failed! Email or phone number already registered',
+  signupConflict: 'Account creation failed! Email or phone number already registered',
   otpMessage: 'is your ChowFood verification code',
   userNotFound: 'Oops, user not found or not recognized. Please make sure you are logged in and try again',
   invalidPassword: 'Password must be between 6-15 characters, containing numbers and special characters. Spaces not allowed',
@@ -27,6 +27,11 @@ const messages = {
   invalidLoginEmailPhone: 'Please provide a valid email. eg. example@domain.com or phone number. eg. +250787771001',
   loginUserNotVerified: 'You are almost there. Just verify your account first',
   invalidCredentials: 'Invalid identifier or password. Please try again',
+  adminVendorAddEmpty: 'firstName is required, lastName is required, email is required, phone is required, address is required, name is required',
+  adminVendorAddSuccess: 'Vendor created successfully',
+  adminVendorAddDuplicate: 'Cannot create vendor account. TIN already registered',
+  adminVendorAddEmptyName: 'name is not allowed to be empty',
+  adminOnlyResource: 'You are not allowed to perform this action. In fact, if you try again, our bots will come for you',
 };
 
 export default messages;
