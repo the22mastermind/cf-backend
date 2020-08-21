@@ -15,6 +15,12 @@ const saveVendor = async (data) => {
   return savedVendor.dataValues;
 };
 
+const fetchVendor = async (condition) => {
+  const vendorData = await vendor.findOne({ where: { id: condition } });
+  return vendorData;
+};
+
 export default {
   saveVendor,
+  fetchVendor,
 };

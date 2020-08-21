@@ -46,7 +46,18 @@ const adminValidator = (data) => {
   });
 };
 
+const idValidator = (data) => {
+  const schema = Joi.object({
+    id: handleValidations(/^[0-9]{1,}$/, { 'string.pattern.base': messages.adminVendorFetchBadId }, false),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
+  idValidator,
 };

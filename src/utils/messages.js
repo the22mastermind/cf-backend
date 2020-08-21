@@ -32,6 +32,9 @@ const messages = {
   adminVendorAddDuplicate: 'Cannot create vendor account. TIN already registered',
   adminVendorAddEmptyName: 'name is not allowed to be empty',
   adminOnlyResource: 'You are not allowed to perform this action. In fact, if you try again, our bots will come for you',
+  adminVendorFetchSuccess: 'Vendor retrieved successfully',
+  adminVendorFetchNotFound: 'Vendor not found',
+  adminVendorFetchBadId: 'Id must be a number',
 };
 
 export default messages;

@@ -5,12 +5,14 @@ import userRoles from '../utils/userRoles';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
+import adminService from '../services/admin';
 
 const { vendor } = models;
-const { adminValidator } = validations;
+const { adminValidator, idValidator } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
+const { fetchVendor } = adminService;
 
 const adminValidation = async (req, res, next) => {
   const { error } = adminValidator(req.body);
@@ -37,8 +39,25 @@ const isAdmin = async (req, res, next) => {
   return next();
 };
 
+const paramsValidation = async (req, res, next) => {
+  const { error } = idValidator(req.params);
+  returnErrorMessages(error, res, next);
+};
+
+const findVendorById = async (req, res, next) => {
+  const { id } = req.params;
+  const vendorData = await fetchVendor(id);
+  if (!vendorData) {
+    return errorResponse(res, statusCodes.notFound, messages.adminVendorFetchNotFound);
+  }
+  req.vendorData = vendorData.dataValues;
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
   isAdmin,
+  findVendorById,
+  paramsValidation,
 };
