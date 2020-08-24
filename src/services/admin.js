@@ -35,9 +35,21 @@ const fetchCategory = async (condition) => {
   return categoryData;
 };
 
+const deleteItem = async (model, condition) => {
+  const deletedItem = await model.destroy({ where: { id: condition } });
+  return deletedItem;
+};
+
+const findById = async (model, condition) => {
+  const item = await model.findOne({ where: { id: condition } });
+  return item;
+};
+
 export default {
   saveVendor,
   fetchVendor,
   saveCategory,
   fetchCategory,
+  deleteItem,
+  findById,
 };

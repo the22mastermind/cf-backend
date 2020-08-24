@@ -23,7 +23,7 @@
         "no-unused-vars": [
             "error",
             {
-                "argsIgnorePattern": "Sequelize"
+                "argsIgnorePattern": "Sequelize|models"
             }
         ],
         "no-undef": "off",

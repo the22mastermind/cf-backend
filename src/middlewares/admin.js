@@ -7,12 +7,12 @@ import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 import adminService from '../services/admin';
 
-const { vendor } = models;
+const { vendor, category } = models;
 const { adminValidator, idValidator } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
-const { fetchVendor, fetchCategory } = adminService;
+const { fetchVendor, fetchCategory, findById } = adminService;
 
 const adminValidation = async (req, res, next) => {
   const type = req.path.split('/').pop();
@@ -64,6 +64,16 @@ const categoryExists = async (req, res, next) => {
   return next();
 };
 
+const findCategoryById = async (req, res, next) => {
+  const { id } = req.params;
+  const categoryData = await findById(category, id);
+  if (!categoryData) {
+    return errorResponse(res, statusCodes.notFound, messages.categoryNotFound);
+  }
+  req.categoryData = categoryData.dataValues;
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -71,4 +81,5 @@ export default {
   findVendorById,
   paramsValidation,
   categoryExists,
+  findCategoryById,
 };

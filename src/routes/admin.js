@@ -3,7 +3,12 @@ import admin from '../controllers/admin';
 import authMiddleware from '../middlewares/authentication';
 import adminMiddleware from '../middlewares/admin';
 
-const { addVendor, viewSingleVendor, createCategory } = admin;
+const {
+  addVendor,
+  viewSingleVendor,
+  createCategory,
+  deleteCategory,
+} = admin;
 const {
   userExists,
   checkTokenAndUser,
@@ -15,11 +20,13 @@ const {
   findVendorById,
   paramsValidation,
   categoryExists,
+  findCategoryById,
 } = adminMiddleware;
 const adminRoutes = express.Router();
 
 adminRoutes.post('/vendor', adminValidation, userExists, vendorExists, checkTokenAndUser, isAdmin, addVendor);
 adminRoutes.get('/vendor/:id', paramsValidation, findVendorById, checkTokenAndUser, isAdmin, viewSingleVendor);
 adminRoutes.post('/category', adminValidation, checkTokenAndUser, isAdmin, categoryExists, createCategory);
+adminRoutes.delete('/category/:id', paramsValidation, checkTokenAndUser, isAdmin, findCategoryById, deleteCategory);
 
 export default adminRoutes;

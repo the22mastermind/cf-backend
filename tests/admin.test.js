@@ -391,3 +391,49 @@ describe('ADMIN CREATE CATEGORY', () => {
       });
   });
 });
+
+describe('ADMIN DELETE CATEGORY', () => {
+  it('Invalid id should return 400', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/abc`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
+        done();
+      });
+  });
+  it('Unexistant category id should return 404', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/999`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.categoryNotFound);
+        done();
+      });
+  });
+  it('Valid category id should return 200', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/1`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.adminDeleteCategory);
+        expect(data);
+        expect(data).to.equal(1);
+        done();
+      });
+  });
+});

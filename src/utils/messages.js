@@ -40,6 +40,8 @@ const messages = {
   adminAddCategoryEmptyName: 'name is not allowed to be empty',
   adminAddCategoryInvalidName: 'Category name cannot contain numbers or symbols',
   adminAddCategoryInvalidDesc: 'Category description must contain 3-300 characters',
+  adminDeleteCategory: 'Category deleted successfully',
+  categoryNotFound: 'Category not found',
 };
 
 export default messages;
