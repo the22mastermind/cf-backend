@@ -5,11 +5,18 @@ import userRoles from '../utils/userRoles';
 import userStatus from '../utils/userStatus';
 import authService from '../services/authentication';
 import adminService from '../services/admin';
+import models from '../models';
 
 const { successResponse } = responseHandler;
-const { adminVendorAddSuccess, adminVendorFetchSuccess } = messages;
+const {
+  adminVendorAddSuccess,
+  adminVendorFetchSuccess,
+  adminAddCategory,
+  adminDeleteCategory,
+} = messages;
 const { saveData } = authService;
-const { saveVendor } = adminService;
+const { saveVendor, saveCategory, deleteItem } = adminService;
+const { category } = models;
 
 export default class Admin {
   static addVendor = async (req, res) => {
@@ -48,5 +55,24 @@ export default class Admin {
   static viewSingleVendor = async (req, res) => {
     const data = req.vendorData;
     return successResponse(res, statusCodes.success, adminVendorFetchSuccess, null, data);
+  };
+
+  static createCategory = async (req, res) => {
+    const {
+      name,
+      description,
+    } = req.body;
+    const categoryInfo = {
+      name,
+      description,
+    };
+    const categoryData = await saveCategory(categoryInfo);
+    return successResponse(res, statusCodes.created, adminAddCategory, null, categoryData);
+  };
+
+  static deleteCategory = async (req, res) => {
+    const { id } = req.params;
+    const categoryData = await deleteItem(category, id);
+    return successResponse(res, statusCodes.success, adminDeleteCategory, null, categoryData);
   };
 };

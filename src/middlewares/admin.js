@@ -7,15 +7,16 @@ import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 import adminService from '../services/admin';
 
-const { vendor } = models;
+const { vendor, category } = models;
 const { adminValidator, idValidator } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
-const { fetchVendor } = adminService;
+const { fetchVendor, fetchCategory, findById } = adminService;
 
 const adminValidation = async (req, res, next) => {
-  const { error } = adminValidator(req.body);
+  const type = req.path.split('/').pop();
+  const { error } = adminValidator(req.body, type);
   returnErrorMessages(error, res, next);
 };
 
@@ -54,10 +55,31 @@ const findVendorById = async (req, res, next) => {
   return next();
 };
 
+const categoryExists = async (req, res, next) => {
+  const { name } = req.body;
+  const categoryData = await fetchCategory(name);
+  if (categoryData) {
+    return errorResponse(res, statusCodes.conflict, messages.adminAddCategoryDuplicate);
+  }
+  return next();
+};
+
+const findCategoryById = async (req, res, next) => {
+  const { id } = req.params;
+  const categoryData = await findById(category, id);
+  if (!categoryData) {
+    return errorResponse(res, statusCodes.notFound, messages.categoryNotFound);
+  }
+  req.categoryData = categoryData.dataValues;
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
   isAdmin,
   findVendorById,
   paramsValidation,
+  categoryExists,
+  findCategoryById,
 };

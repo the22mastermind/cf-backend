@@ -78,6 +78,22 @@ const adminSample = {
     address: 'Kicukiro',
     name: 'Chow Food',
   },
+  validCategory: {
+    name: 'Food',
+    description: 'Dishes from your favorite restaurants and Fast Food joints.',
+  },
+  invalidCategoryName: {
+    name: 'Fast $ Food',
+    description: 'Dishes from your favorite restaurants and Fast Food joints.',
+  },
+  invalidCategoryDescription: {
+    name: 'Fast Food',
+    description: 'D',
+  },
+  emptyCategoryName: {
+    name: '',
+    description: 'Dishes from your favorite restaurants and Fast Food joints.',
+  },
 };
 
 export default adminSample;

@@ -297,3 +297,143 @@ describe('ADMIN VIEW SINGLE VENDOR', () => {
       });
   });
 });
+
+describe('ADMIN CREATE CATEGORY', () => {
+  it('Empty name should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category`)
+      .send(sample.emptyCategoryName)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminAddCategoryEmptyName);
+        done();
+      });
+  });
+  it('Invalid category name should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category`)
+      .send(sample.invalidCategoryName)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminAddCategoryInvalidName);
+        done();
+      });
+  });
+  it('Invalid category description should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category`)
+      .send(sample.invalidCategoryDescription)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminAddCategoryInvalidDesc);
+        done();
+      });
+  });
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send(sample.adminCredentials)
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Valid category should return 201', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validCategory)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.adminAddCategory);
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        done();
+      });
+  });
+  it('Adding existing category should return 409', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validCategory)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.adminAddCategoryDuplicate);
+        done();
+      });
+  });
+});
+
+describe('ADMIN DELETE CATEGORY', () => {
+  it('Invalid id should return 400', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/abc`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
+        done();
+      });
+  });
+  it('Unexistant category id should return 404', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/999`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.categoryNotFound);
+        done();
+      });
+  });
+  it('Valid category id should return 200', (done) => {
+    chai
+      .request(server)
+      .delete(`${baseUrl}/category/1`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.adminDeleteCategory);
+        expect(data);
+        expect(data).to.equal(1);
+        done();
+      });
+  });
+});
