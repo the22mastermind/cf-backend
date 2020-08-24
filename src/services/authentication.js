@@ -4,7 +4,13 @@ const { user } = models;
 
 const saveData = async (data) => {
   const {
-    firstName, lastName, email, phone, role, profileComplete,
+    firstName,
+    lastName,
+    email,
+    phone,
+    role,
+    isVerified,
+    profileComplete,
   } = data;
   const savedData = await user.create({
     firstName,
@@ -12,6 +18,7 @@ const saveData = async (data) => {
     email,
     phone,
     role,
+    isVerified,
     profileComplete,
   });
   return savedData.dataValues;

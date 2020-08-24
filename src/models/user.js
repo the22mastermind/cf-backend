@@ -75,5 +75,12 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
   });
+  user.associate = (models) => {
+    user.hasOne(models.vendor, {
+      foreignKey: 'userId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
+  };
   return user;
 };

@@ -29,6 +29,24 @@ const payloadValidator = (data, type) => {
   });
 };
 
+const adminValidator = (data) => {
+  const schema = Joi.object({
+    firstName: handleValidations(/^([a-zA-Z]{3,30})+$/, { 'string.pattern.base': messages.invalidSignupFirstName }, false),
+    lastName: handleValidations(/^([a-zA-Z]{3,30})+$/, { 'string.pattern.base': messages.invalidSignupLastName }, false),
+    email: handleValidations(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i, { 'string.pattern.base': messages.invalidSignupEmail }, false),
+    phone: handleValidations(/^[+]+([0-9]{12})$/, { 'string.pattern.base': messages.invalidSignupPhone }, false),
+    address: handleValidations(/^[0-9a-zA-Z, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, false),
+    name: handleValidations(/^[0-9a-zA-Z, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, false),
+    tin: handleValidations(/^[0-9, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, true),
+    website: handleValidations(/^[A-Z0-9._%+-]+[A-Z0-9.-]+\.[A-Z]{2,10}$/i, { 'string.pattern.base': messages.invalidAddress }, true),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
+  adminValidator,
 };

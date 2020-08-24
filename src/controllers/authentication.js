@@ -6,7 +6,7 @@ import miscellaneousHelpers from '../helpers/miscellaneous';
 import userRoles from '../utils/userRoles';
 import authService from '../services/authentication';
 
-const { successResponse } = responseHandler;
+const { successResponse, errorResponse } = responseHandler;
 const {
   validSignup,
   validProfileUpdate,
@@ -51,6 +51,9 @@ export default class Authentication {
     if (req.updateData.profileComplete) {
       await updateProfile(req.updateData, condition);
       return successResponse(res, statusCodes.success, profileUpdateCompleted, null, null);
+    }
+    if (!req.userData.isVerified) {
+      return errorResponse(res, statusCodes.unauthorized, messages.userNotVerified);
     }
     const { dataValues } = await updateProfile(req.updateData, condition);
     const data = _.omit(dataValues, 'password');

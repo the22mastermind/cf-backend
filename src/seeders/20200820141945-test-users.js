@@ -3,7 +3,7 @@ import userRoles from '../utils/userRoles';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 
 const { hashPassword } = miscellaneousHelpers;
-const { CONSUMER } = userRoles;
+const { CONSUMER, ADMIN } = userRoles;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => queryInterface.bulkInsert('users', [
@@ -49,6 +49,21 @@ module.exports = {
       address: 'Kacyiru, KG 7 Ave, 2',
       subscription: 'Premium',
       subscriptionExpires: moment().add(2, 'months').format('MM-DD-YYYY'),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    {
+      firstName: 'admin',
+      lastName: 'admin',
+      email: 'admin@gmail.com',
+      phone: '+250783333333',
+      password: await hashPassword('hellowordl@0'),
+      role: ADMIN,
+      profileComplete: true,
+      isVerified: true,
+      address: 'Kacyiru, KG 7 Ave, 2',
+      subscription: '',
+      subscriptionExpires: '',
       createdAt: new Date(),
       updatedAt: new Date(),
     },
