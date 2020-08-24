@@ -15,7 +15,8 @@
     "db:migrate": "npx sequelize-cli db:migrate",
     "db:undo": "npx sequelize-cli db:migrate:undo:all",
     "pretest": "yarn db:drop && yarn db:create && yarn db:migrate && yarn seed",
-    "seed": "npx sequelize-cli db:seed:all"
+    "seed": "npx sequelize-cli db:seed:all",
+    "create-admin": "babel-node ./src/scripts/createAdmin.js"
   },
   "repository": {
     "type": "git",
