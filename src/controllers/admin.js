@@ -7,7 +7,7 @@ import authService from '../services/authentication';
 import adminService from '../services/admin';
 
 const { successResponse } = responseHandler;
-const { adminVendorAddSuccess } = messages;
+const { adminVendorAddSuccess, adminVendorFetchSuccess } = messages;
 const { saveData } = authService;
 const { saveVendor } = adminService;
 
@@ -43,5 +43,10 @@ export default class Admin {
     };
     const vendorData = await saveVendor(vendorInfo);
     return successResponse(res, statusCodes.created, adminVendorAddSuccess, null, vendorData);
+  };
+
+  static viewSingleVendor = async (req, res) => {
+    const data = req.vendorData;
+    return successResponse(res, statusCodes.success, adminVendorFetchSuccess, null, data);
   };
 };
