@@ -7,9 +7,9 @@ import authService from '../services/authentication';
 import adminService from '../services/admin';
 
 const { successResponse } = responseHandler;
-const { adminVendorAddSuccess, adminVendorFetchSuccess } = messages;
+const { adminVendorAddSuccess, adminVendorFetchSuccess, adminAddCategory } = messages;
 const { saveData } = authService;
-const { saveVendor } = adminService;
+const { saveVendor, saveCategory } = adminService;
 
 export default class Admin {
   static addVendor = async (req, res) => {
@@ -48,5 +48,18 @@ export default class Admin {
   static viewSingleVendor = async (req, res) => {
     const data = req.vendorData;
     return successResponse(res, statusCodes.success, adminVendorFetchSuccess, null, data);
+  };
+
+  static createCategory = async (req, res) => {
+    const {
+      name,
+      description,
+    } = req.body;
+    const categoryInfo = {
+      name,
+      description,
+    };
+    const categoryData = await saveCategory(categoryInfo);
+    return successResponse(res, statusCodes.created, adminAddCategory, null, categoryData);
   };
 };
