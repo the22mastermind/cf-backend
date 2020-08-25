@@ -437,3 +437,91 @@ describe('ADMIN DELETE CATEGORY', () => {
       });
   });
 });
+
+describe('ADMIN ADD PRODUCT', () => {
+  it('Empty name should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/2/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.emptyProductName)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminAddCategoryEmptyName);
+        done();
+      });
+  });
+  it('Empty cost should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/2/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.emptyProductCost)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.emptyProductCost);
+        done();
+      });
+  });
+  it('Invalid category id should return 400', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/abc/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validProductDrink)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
+        done();
+      });
+  });
+  it('Valid product (drinks) should return 201', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/2/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validProductDrink)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.productAddSuccess);
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('categoryId');
+        done();
+      });
+  });
+  it('Valid product (market) should return 201', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/3/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validProductMarket)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.productAddSuccess);
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('categoryId');
+        done();
+      });
+  });
+});

@@ -42,6 +42,16 @@ const messages = {
   adminAddCategoryInvalidDesc: 'Category description must contain 3-300 characters',
   adminDeleteCategory: 'Category deleted successfully',
   categoryNotFound: 'Category not found',
+  emptyProductCost: 'cost is not allowed to be empty',
+  absentCategoryId: 'categoryId is required',
+  productAddSuccess: 'Product added successfully',
+  productNameInvalid: 'Product name must contain 3-60 characters. Spaces are allowed',
+  productDescInvalid: 'Description must contain 3-300 characters. Spaces are allowed',
+  productQuantityInvalid: 'Quantity must be like 200 ml or 5 kg',
+  productCostInvalid: 'Cost must be a positive number',
+  productCurrencyInvalid: 'Currency must be one of RWF, CFA, USD',
+  productImageInvalid: 'Please provide a valid url',
+  productCategoryIdInvalid: 'categoryId must be a number',
 };
 
 export default messages;

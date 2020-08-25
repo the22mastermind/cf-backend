@@ -45,6 +45,11 @@ const findById = async (model, condition) => {
   return item;
 };
 
+const saveObj = async (model, data) => {
+  const savedObj = await model.create(data);
+  return savedObj.dataValues;
+};
+
 export default {
   saveVendor,
   fetchVendor,
@@ -52,4 +57,5 @@ export default {
   fetchCategory,
   deleteItem,
   findById,
+  saveObj,
 };

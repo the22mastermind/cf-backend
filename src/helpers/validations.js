@@ -39,6 +39,13 @@ const adminValidator = (data, type) => {
     name: handleValidations(/^[0-9a-zA-Z, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, false),
     tin: handleValidations(/^[0-9, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, true),
     website: handleValidations(/^[A-Z0-9._%+-]+[A-Z0-9.-]+\.[A-Z]{2,10}$/i, { 'string.pattern.base': messages.invalidAddress }, true),
+  }) : type === 'product' ? Joi.object({
+    name: handleValidations(/^([a-zA-Z ]{3,60})$/, { 'string.pattern.base': messages.productNameInvalid }, false),
+    description: handleValidations(/^([a-zA-Z,.;:\n ]{0,300})$/, { 'string.pattern.base': messages.productDescInvalid }, true),
+    quantity: handleValidations(/^[0-9]{1,5}[ ]+(ml|kg)$/i, { 'string.pattern.base': messages.productQuantityInvalid }, true),
+    cost: handleValidations(/^([0-9]{3,6})$/, { 'string.pattern.base': messages.productCostInvalid }, false),
+    currency: handleValidations(/^(RWF|CFA|USD)$/, { 'string.pattern.base': messages.productCurrencyInvalid }, false),
+    image: handleValidations(/^[a-z0-9._%+-:/]{10,}$/, { 'string.pattern.base': messages.productImageInvalid }, true),
   }) : Joi.object({
     name: handleValidations(/^([a-zA-Z ]{3,30})+$/, { 'string.pattern.base': messages.adminAddCategoryInvalidName }, false),
     description: handleValidations(/^([a-zA-Z,.\n ]{3,300})+$/, { 'string.pattern.base': messages.adminAddCategoryInvalidDesc }, true),

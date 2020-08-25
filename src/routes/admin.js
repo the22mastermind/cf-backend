@@ -8,6 +8,7 @@ const {
   viewSingleVendor,
   createCategory,
   deleteCategory,
+  addProduct,
 } = admin;
 const {
   userExists,
@@ -28,5 +29,6 @@ adminRoutes.post('/vendor', adminValidation, userExists, vendorExists, checkToke
 adminRoutes.get('/vendor/:id', paramsValidation, findVendorById, checkTokenAndUser, isAdmin, viewSingleVendor);
 adminRoutes.post('/category', adminValidation, checkTokenAndUser, isAdmin, categoryExists, createCategory);
 adminRoutes.delete('/category/:id', paramsValidation, checkTokenAndUser, isAdmin, findCategoryById, deleteCategory);
+adminRoutes.post('/category/:id/product', paramsValidation, adminValidation, checkTokenAndUser, isAdmin, findCategoryById, addProduct);
 
 export default adminRoutes;
