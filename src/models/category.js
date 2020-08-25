@@ -13,6 +13,7 @@ export default (sequelize, DataTypes) => {
     category.hasMany(models.product, {
       foreignKey: 'categoryId',
       onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
     });
   };
   return category;

@@ -5,3 +5,6 @@ checks:
       threshold: 5
   similar-code:
     enabled: false
+exclude_patterns:
+    - "src/seeders/"
+    - "tests/"
