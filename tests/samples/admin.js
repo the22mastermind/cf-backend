@@ -94,6 +94,38 @@ const adminSample = {
     name: '',
     description: 'Dishes from your favorite restaurants and Fast Food joints.',
   },
+  emptyProductName: {
+    name: '',
+    description: 'abc',
+    quantity: '250 ml',
+    cost: '3000',
+    currency: 'RWF',
+    image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
+  },
+  emptyProductCost: {
+    name: 'Cappuccino',
+    description: 'abc',
+    quantity: '250 ml',
+    cost: '',
+    currency: 'RWF',
+    image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
+  },
+  validProductDrink: {
+    name: 'Cappuccino',
+    description: 'Some good description goes here.',
+    quantity: '250 ml',
+    cost: '3000',
+    currency: 'RWF',
+    image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
+  },
+  validProductMarket: {
+    name: 'Irish Potatoes',
+    description: 'Some good description goes here.',
+    quantity: '2 kg',
+    cost: '1000',
+    currency: 'CFA',
+    image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
+  },
 };
 
 export default adminSample;

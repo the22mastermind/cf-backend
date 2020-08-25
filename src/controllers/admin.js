@@ -13,10 +13,16 @@ const {
   adminVendorFetchSuccess,
   adminAddCategory,
   adminDeleteCategory,
+  productAddSuccess,
 } = messages;
 const { saveData } = authService;
-const { saveVendor, saveCategory, deleteItem } = adminService;
-const { category } = models;
+const {
+  saveVendor,
+  saveCategory,
+  deleteItem,
+  saveObj,
+} = adminService;
+const { category, product } = models;
 
 export default class Admin {
   static addVendor = async (req, res) => {
@@ -74,5 +80,27 @@ export default class Admin {
     const { id } = req.params;
     const categoryData = await deleteItem(category, id);
     return successResponse(res, statusCodes.success, adminDeleteCategory, null, categoryData);
+  };
+
+  static addProduct = async (req, res) => {
+    const {
+      name,
+      description,
+      quantity,
+      cost,
+      currency,
+      image,
+    } = req.body;
+    const data = {
+      name,
+      description,
+      quantity,
+      cost: parseInt(cost, 10),
+      currency,
+      image,
+      categoryId: req.categoryData.id,
+    };
+    const savedObj = await saveObj(product, data);
+    return successResponse(res, statusCodes.created, productAddSuccess, null, savedObj);
   };
 };

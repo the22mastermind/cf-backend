@@ -9,6 +9,11 @@ export default (sequelize, DataTypes) => {
       type: DataTypes.STRING,
     },
   });
-  category.associate = (models) => {};
+  category.associate = (models) => {
+    category.hasMany(models.product, {
+      foreignKey: 'categoryId',
+      onUpdate: 'CASCADE',
+    });
+  };
   return category;
 };
