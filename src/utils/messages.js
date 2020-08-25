@@ -52,6 +52,8 @@ const messages = {
   productCurrencyInvalid: 'Currency must be one of RWF, CFA, USD',
   productImageInvalid: 'Please provide a valid url',
   productCategoryIdInvalid: 'categoryId must be a number',
+  categoriesNotFound: 'No categories found at the moment',
+  categoriesFound: 'Categories retrieved successfully',
 };
 
 export default messages;

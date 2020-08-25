@@ -88,6 +88,10 @@ const authSample = {
     identifier: 'notfound@gmail.com',
     password: 'hellowordl@9',
   },
+  regularUser: {
+    identifier: '+250783331001',
+    password: 'jonasbro@1bro',
+  },
 };
 
 export default authSample;
