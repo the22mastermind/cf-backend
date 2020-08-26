@@ -54,6 +54,57 @@ describe('USER FETCH ALL CATEGORIES', () => {
   });
 });
 
+describe('USER FETCH PRODUCTS BY CATEGORY', () => {
+  it('Products found should return 200', (done) => {
+    chai
+      .request(server)
+      .get(`${baseUrl}/2/products`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.productsFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('name');
+        expect(data[0]).to.haveOwnProperty('description');
+        expect(data[0]).to.haveOwnProperty('cost');
+        done();
+      });
+  });
+  it('Products not found should return 404', (done) => {
+    chai
+      .request(server)
+      .get(`${baseUrl}/4/products`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.productsNotFound);
+        done();
+      });
+  });
+  it('Unexistant category id should return 404', (done) => {
+    chai
+      .request(server)
+      .get(`${baseUrl}/100/products`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.categoryNotFound);
+        done();
+      });
+  });
+});
+
 describe('USER FETCH ALL CATEGORIES NOT FOUND', () => {
   beforeEach('Delete all categories', async () => {
     await db.sequelize.query('DELETE FROM products');

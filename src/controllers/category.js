@@ -6,9 +6,14 @@ import categoryService from '../services/category';
 import models from '../models';
 
 const { successResponse, errorResponse } = responseHandler;
-const { categoriesFound, categoriesNotFound } = messages;
-const { getAll } = categoryService;
-const { category } = models;
+const {
+  categoriesFound,
+  categoriesNotFound,
+  productsFound,
+  productsNotFound,
+} = messages;
+const { getAll, getProductsByCategory } = categoryService;
+const { category, product } = models;
 
 export default class Category {
   static getAllCategories = async (req, res) => {
@@ -17,5 +22,14 @@ export default class Category {
       return errorResponse(res, statusCodes.notFound, categoriesNotFound, null, rows);
     }
     return successResponse(res, statusCodes.success, categoriesFound, null, rows);
+  };
+
+  static getProducts = async (req, res) => {
+    const { id } = req.params;
+    const data = await getProductsByCategory(product, id);
+    if (_.isEmpty(data)) {
+      return errorResponse(res, statusCodes.notFound, productsNotFound, null, data);
+    }
+    return successResponse(res, statusCodes.success, productsFound, null, data);
   };
 };
