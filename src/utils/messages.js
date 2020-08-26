@@ -54,6 +54,8 @@ const messages = {
   productCategoryIdInvalid: 'categoryId must be a number',
   categoriesNotFound: 'No categories found at the moment',
   categoriesFound: 'Categories retrieved successfully',
+  productsFound: 'Products retrieved successfully',
+  productsNotFound: 'No products found at the moment',
 };
 
 export default messages;
