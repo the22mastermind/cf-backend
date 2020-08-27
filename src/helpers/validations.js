@@ -56,6 +56,17 @@ const adminValidator = (data, type) => {
   });
 };
 
+const userValidator = (data) => {
+  const schema = Joi.object({
+    vote: handleValidations(/^((0)|(0.5)|(1.0)|(1.5)|(2.0)|(2.5)|(3.0)|(3.5)|(4.0)|(4.5)|(5.0))$/, { 'string.pattern.base': messages.reviewAddInvalidVote }, false),
+    comment: handleValidations(/^([a-zA-Z,.\n ]{0,300})$/, { 'string.pattern.base': messages.reviewAddInvalidComment }, false),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 const idValidator = (data) => {
   const schema = Joi.object({
     id: handleValidations(/^[0-9]{1,}$/, { 'string.pattern.base': messages.adminVendorFetchBadId }, false),
@@ -70,4 +81,5 @@ export default {
   payloadValidator,
   adminValidator,
   idValidator,
+  userValidator,
 };

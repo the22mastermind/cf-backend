@@ -51,6 +51,11 @@ const isPasswordValid = async (password, savedPassword) => {
   return isValid;
 };
 
+const computeAverage = async (total, count) => {
+  const average = (total / count).toFixed(2);
+  return average;
+};
+
 export default {
   createToken,
   returnErrorMessages,
@@ -58,4 +63,5 @@ export default {
   sendOTP,
   hashPassword,
   isPasswordValid,
+  computeAverage,
 };

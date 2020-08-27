@@ -58,6 +58,12 @@ const messages = {
   productsNotFound: 'No products found at the moment',
   productFound: 'Product details retrieved successfully',
   productNotFound: 'Product not found',
+  reviewAdded: 'Review submitted successfully',
+  reviewConflict: 'You have already submitted a review',
+  reviewAddInvalidComment: 'Comment must contain up to 300 characters and cannot be empty',
+  reviewAddEmptyComment: 'comment is not allowed to be empty',
+  reviewAddInvalidVote: 'Vote must be between 0-5 with a 0.5 interval',
+  reviewAddEmptyVote: 'vote is not allowed to be empty',
 };
 
 export default messages;
