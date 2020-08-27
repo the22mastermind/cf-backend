@@ -50,6 +50,11 @@ const saveObj = async (model, data) => {
   return savedObj.dataValues;
 };
 
+const findAllById = async (model, condition) => {
+  const item = await model.findOne({ where: { id: condition }, include: [{ all: true }] });
+  return item;
+};
+
 export default {
   saveVendor,
   fetchVendor,
@@ -58,4 +63,5 @@ export default {
   deleteItem,
   findById,
   saveObj,
+  findAllById,
 };
