@@ -9,6 +9,7 @@ import db from '../src/models';
 const {
   success,
   notFound,
+  badRequest,
 } = statusCodes;
 const baseUrl = '/categories';
 
@@ -100,6 +101,61 @@ describe('USER FETCH PRODUCTS BY CATEGORY', () => {
         expect(res.status).to.equal(notFound);
         expect(error);
         expect(error).to.equal(messages.categoryNotFound);
+        done();
+      });
+  });
+});
+
+describe('USER FETCH SINGLE PRODUCT', () => {
+  it('Product found should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/product/1')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.productFound);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('cost');
+        expect(data.category).to.haveOwnProperty('id');
+        expect(data.category).to.haveOwnProperty('name');
+        expect(data.category).to.haveOwnProperty('description');
+        expect(data.categoryId).to.equal(data.category.id);
+        done();
+      });
+  });
+  it('Product not found should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/product/100')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.productNotFound);
+        done();
+      });
+  });
+  it('Invalid product id should return 400', (done) => {
+    chai
+      .request(server)
+      .get('/product/hello')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
         done();
       });
   });

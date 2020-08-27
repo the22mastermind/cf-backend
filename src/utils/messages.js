@@ -56,6 +56,8 @@ const messages = {
   categoriesFound: 'Categories retrieved successfully',
   productsFound: 'Products retrieved successfully',
   productsNotFound: 'No products found at the moment',
+  productFound: 'Product details retrieved successfully',
+  productNotFound: 'Product not found',
 };
 
 export default messages;
