@@ -8,7 +8,19 @@ const getProductsByCategory = async (model, condition) => {
   return data;
 };
 
+const getByCondition = async (model, condition) => {
+  const data = await model.findOne({ where: { userId: condition } });
+  return data;
+};
+
+const getColumnSum = async (model, column) => {
+  const total = await model.sum(column);
+  return total;
+};
+
 export default {
   getAll,
   getProductsByCategory,
+  getByCondition,
+  getColumnSum,
 };

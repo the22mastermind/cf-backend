@@ -16,6 +16,11 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
+    product.hasMany(models.review, {
+      foreignKey: 'productId',
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    });
   };
   return product;
 };

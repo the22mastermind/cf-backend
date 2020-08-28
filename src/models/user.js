@@ -81,6 +81,11 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
+    user.hasOne(models.review, {
+      foreignKey: 'userId',
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    });
   };
   return user;
 };
