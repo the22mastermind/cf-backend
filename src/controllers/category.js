@@ -2,7 +2,7 @@ import _ from 'lodash';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
-import categoryService from '../services/category';
+import service from '../services/services';
 import models from '../models';
 
 const { successResponse, errorResponse } = responseHandler;
@@ -12,7 +12,7 @@ const {
   productsFound,
   productsNotFound,
 } = messages;
-const { getAll, getProductsByCategory } = categoryService;
+const { getAll, getProductsByCategory } = service;
 const { category, product } = models;
 
 export default class Category {

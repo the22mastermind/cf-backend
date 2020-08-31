@@ -3,8 +3,7 @@ import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import userRoles from '../utils/userRoles';
 import userStatus from '../utils/userStatus';
-import authService from '../services/authentication';
-import adminService from '../services/admin';
+import service from '../services/services';
 import models from '../models';
 
 const { successResponse } = responseHandler;
@@ -15,14 +14,16 @@ const {
   adminDeleteCategory,
   productAddSuccess,
 } = messages;
-const { saveData } = authService;
 const {
-  saveVendor,
-  saveCategory,
   deleteItem,
   saveObj,
-} = adminService;
-const { category, product } = models;
+} = service;
+const {
+  category,
+  product,
+  vendor,
+  user,
+} = models;
 
 export default class Admin {
   static addVendor = async (req, res) => {
@@ -46,7 +47,7 @@ export default class Admin {
       isVerified: false,
       address,
     };
-    const { id } = await saveData(userInfo);
+    const { id } = await saveObj(user, userInfo);
     const vendorInfo = {
       name,
       userId: id,
@@ -54,7 +55,7 @@ export default class Admin {
       website,
       status: userStatus.ACTIVE,
     };
-    const vendorData = await saveVendor(vendorInfo);
+    const vendorData = await saveObj(vendor, vendorInfo);
     return successResponse(res, statusCodes.created, adminVendorAddSuccess, null, vendorData);
   };
 
@@ -72,7 +73,7 @@ export default class Admin {
       name,
       description,
     };
-    const categoryData = await saveCategory(categoryInfo);
+    const categoryData = await saveObj(category, categoryInfo);
     return successResponse(res, statusCodes.created, adminAddCategory, null, categoryData);
   };
 
