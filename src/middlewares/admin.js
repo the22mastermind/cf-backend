@@ -5,14 +5,14 @@ import userRoles from '../utils/userRoles';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
-import adminService from '../services/admin';
+import service from '../services/services';
 
 const { vendor, category } = models;
 const { adminValidator, idValidator } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
-const { fetchVendor, fetchCategory, findById } = adminService;
+const { findById, findByCondition } = service;
 
 const adminValidation = async (req, res, next) => {
   const type = req.path.split('/').pop();
@@ -23,7 +23,7 @@ const adminValidation = async (req, res, next) => {
 const vendorExists = async (req, res, next) => {
   const { tin } = req.body;
   if (tin) {
-    const vendorData = await vendor.findOne({ where: { tin } });
+    const vendorData = await findByCondition(vendor, { tin });
     if (!vendorData) {
       return next();
     }
@@ -47,7 +47,7 @@ const paramsValidation = async (req, res, next) => {
 
 const findVendorById = async (req, res, next) => {
   const { id } = req.params;
-  const vendorData = await fetchVendor(id);
+  const vendorData = await findById(vendor, id);
   if (!vendorData) {
     return errorResponse(res, statusCodes.notFound, messages.adminVendorFetchNotFound);
   }
@@ -57,7 +57,7 @@ const findVendorById = async (req, res, next) => {
 
 const categoryExists = async (req, res, next) => {
   const { name } = req.body;
-  const categoryData = await fetchCategory(name);
+  const categoryData = await findByCondition(category, { name });
   if (categoryData) {
     return errorResponse(res, statusCodes.conflict, messages.adminAddCategoryDuplicate);
   }

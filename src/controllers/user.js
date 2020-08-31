@@ -2,7 +2,7 @@ import _ from 'lodash';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
-import adminService from '../services/admin';
+import service from '../services/services';
 import models from '../models';
 import miscellaneousHandlers from '../helpers/miscellaneous';
 
@@ -11,7 +11,7 @@ const {
   productFound,
   reviewAdded,
 } = messages;
-const { saveObj } = adminService;
+const { saveObj } = service;
 const { review } = models;
 const { computeAverage } = miscellaneousHandlers;
 

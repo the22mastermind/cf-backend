@@ -5,11 +5,15 @@ import miscellaneousHelpers from '../helpers/miscellaneous';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
+import service from '../services/services';
 
 const { user } = models;
 const { payloadValidator } = validations;
 const { returnErrorMessages, hashPassword, isPasswordValid } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
+const {
+  findByCondition,
+} = service;
 
 const handleValidation = async (req, res, next) => {
   const type = req.path.split('/').pop();
@@ -19,9 +23,9 @@ const handleValidation = async (req, res, next) => {
 
 const userExists = async (req, res, next) => {
   const { email, phone } = req.body;
-  let userData = await user.findOne({ where: { email } });
+  let userData = await findByCondition(user, { email });
   if (!userData) {
-    userData = await user.findOne({ where: { phone } });
+    userData = await findByCondition(user, { phone });
   }
   if (!userData) {
     return next();
@@ -65,7 +69,7 @@ const checkTokenAndUser = async (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const { email } = decoded;
-    const userData = await user.findOne({ where: { email } });
+    const userData = await findByCondition(user, { email });
     req.userData = userData.dataValues;
     return next();
   } catch (error) {
@@ -75,9 +79,9 @@ const checkTokenAndUser = async (req, res, next) => {
 
 const loginChecker = async (req, res, next) => {
   const { identifier, password } = req.body;
-  let userProfile = await user.findOne({ where: { email: identifier } });
+  let userProfile = await findByCondition(user, { email: identifier });
   if (!userProfile) {
-    userProfile = await user.findOne({ where: { phone: identifier } });
+    userProfile = await findByCondition(user, { phone: identifier });
   }
   if (!userProfile) {
     return errorResponse(res, statusCodes.notFound, messages.loginUserNotFound);

@@ -4,7 +4,8 @@ import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 import userRoles from '../utils/userRoles';
-import authService from '../services/authentication';
+import service from '../services/services';
+import models from '../models';
 
 const { successResponse, errorResponse } = responseHandler;
 const {
@@ -14,7 +15,8 @@ const {
   validLoginCreds,
 } = messages;
 const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
-const { saveData, updateProfile } = authService;
+const { saveObj, updateProfile } = service;
+const { user } = models;
 
 export default class Authentication {
   static userSignUp = async (req, res) => {
@@ -32,7 +34,7 @@ export default class Authentication {
       role: userRoles.CONSUMER,
       profileComplete: false,
     };
-    const savedData = await saveData(newUser);
+    const savedData = await saveObj(user, newUser);
     const data = _.pick(savedData, 'id', 'firstName', 'phone');
     const token = await createToken(newUser);
     const otp = await generateOTP();
@@ -45,17 +47,17 @@ export default class Authentication {
   static userUpdateProfile = async (req, res) => {
     const condition = { id: req.userData.id };
     if (req.updateData.isVerified) {
-      await updateProfile(req.updateData, condition);
+      await updateProfile(user, req.updateData, condition);
       return successResponse(res, statusCodes.success, validProfileUpdate, null, null);
     }
     if (req.updateData.profileComplete) {
-      await updateProfile(req.updateData, condition);
+      await updateProfile(user, req.updateData, condition);
       return successResponse(res, statusCodes.success, profileUpdateCompleted, null, null);
     }
     if (!req.userData.isVerified) {
       return errorResponse(res, statusCodes.unauthorized, messages.userNotVerified);
     }
-    const { dataValues } = await updateProfile(req.updateData, condition);
+    const { dataValues } = await updateProfile(user, req.updateData, condition);
     const data = _.omit(dataValues, 'password');
     return successResponse(res, statusCodes.success, validProfileUpdate, null, data);
   };

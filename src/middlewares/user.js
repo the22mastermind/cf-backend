@@ -2,15 +2,18 @@ import models from '../models';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
-import adminService from '../services/admin';
-import service from '../services/category';
+import service from '../services/services';
 import validations from '../helpers/validations';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 
 const { product, review } = models;
 const { errorResponse } = responseHandler;
-const { findAllById } = adminService;
-const { getAll, getByCondition, getColumnSum } = service;
+const {
+  getAll,
+  findByCondition,
+  getColumnSum,
+  findAllById,
+} = service;
 const { userValidator } = validations;
 const { returnErrorMessages } = miscellaneousHelpers;
 
@@ -39,7 +42,7 @@ const findReviews = async (req, res, next) => {
 
 const reviewExists = async (req, res, next) => {
   const condition = req.userData.id;
-  const reviewData = await getByCondition(review, condition);
+  const reviewData = await findByCondition(review, { userId: condition });
   if (reviewData) {
     return errorResponse(res, statusCodes.conflict, messages.reviewConflict);
   }
