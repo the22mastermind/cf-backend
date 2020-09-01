@@ -6,13 +6,15 @@ import service from '../services/services';
 import models from '../models';
 import miscellaneousHandlers from '../helpers/miscellaneous';
 
-const { successResponse } = responseHandler;
+const { successResponse, errorResponse } = responseHandler;
 const {
   productFound,
   reviewAdded,
+  productsFound,
+  productsNotFound,
 } = messages;
-const { saveObj } = service;
-const { review } = models;
+const { saveObj, getAllIncludeAll } = service;
+const { review, product } = models;
 const { computeAverage } = miscellaneousHandlers;
 
 export default class User {
@@ -40,5 +42,13 @@ export default class User {
     };
     const savedObj = await saveObj(review, data);
     return successResponse(res, statusCodes.created, reviewAdded, null, savedObj);
+  };
+
+  static getAllProducts = async (req, res) => {
+    const products = await getAllIncludeAll(product);
+    if (_.isEmpty(products)) {
+      return errorResponse(res, statusCodes.notFound, productsNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, productsFound, null, products);
   };
 };

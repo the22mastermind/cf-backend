@@ -43,6 +43,11 @@ const updateProfile = async (model, data, condition) => {
   return profile[1];
 };
 
+const getAllIncludeAll = async (model) => {
+  const data = await model.findAll({ include: [{ all: true }] });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -53,4 +58,5 @@ export default {
   getProductsByCategory,
   getColumnSum,
   updateProfile,
+  getAllIncludeAll,
 };
