@@ -7,6 +7,7 @@ import userMiddleware from '../middlewares/user';
 const {
   getSingleProduct,
   addReview,
+  getAllProducts,
 } = user;
 const {
   checkTokenAndUser,
@@ -24,5 +25,6 @@ const userRoutes = express.Router();
 
 userRoutes.get('/product/:id', paramsValidation, checkTokenAndUser, findProductById, getSingleProduct);
 userRoutes.post('/product/:id/reviews', paramsValidation, userValidation, checkTokenAndUser, findProductById, reviewExists, findReviews, addReview);
+userRoutes.get('/products', checkTokenAndUser, getAllProducts);
 
 export default userRoutes;

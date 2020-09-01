@@ -308,6 +308,36 @@ describe('USER ADD PRODUCT REVIEW', () => {
   });
 });
 
+describe('USER FETCH ALL PRODUCTS', () => {
+  it('Products found should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/products')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.productsFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('name');
+        expect(data[0]).to.haveOwnProperty('description');
+        expect(data[0]).to.haveOwnProperty('cost');
+        expect(data[0]).to.haveOwnProperty('currency');
+        expect(data[0]).to.haveOwnProperty('image');
+        expect(data[0]).to.haveOwnProperty('categoryId');
+        expect(data[0].categoryId).to.equal(data[0].category.id);
+        expect(data[0].category.name).to.be.a('string');
+        expect(data[0]).to.haveOwnProperty('reviews');
+        expect(data[0].reviews).to.be.a('array');
+        done();
+      });
+  });
+});
+
 describe('USER FETCH ALL CATEGORIES NOT FOUND', () => {
   beforeEach('Delete all categories', async () => {
     await db.sequelize.query('DELETE FROM reviews');
@@ -325,6 +355,20 @@ describe('USER FETCH ALL CATEGORIES NOT FOUND', () => {
         expect(res.status).to.equal(notFound);
         expect(error);
         expect(error).to.equal(messages.categoriesNotFound);
+        done();
+      });
+  });
+  it('Products not found should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/products')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.productsNotFound);
         done();
       });
   });
