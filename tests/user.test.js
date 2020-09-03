@@ -333,6 +333,15 @@ describe('USER FETCH ALL PRODUCTS', () => {
         expect(data[0].category.name).to.be.a('string');
         expect(data[0]).to.haveOwnProperty('reviews');
         expect(data[0].reviews).to.be.a('array');
+        expect(data[0].reviews[0]).to.haveOwnProperty('id');
+        expect(data[0].reviews[0]).to.haveOwnProperty('productId');
+        expect(data[0].reviews[0]).to.haveOwnProperty('userId');
+        expect(data[0].reviews[0]).to.haveOwnProperty('average');
+        expect(data[0].reviews[0]).to.haveOwnProperty('vote');
+        expect(data[0].reviews[0]).to.haveOwnProperty('comment');
+        expect(data[0].reviews[0]).to.haveOwnProperty('user');
+        expect(data[0].reviews[0].user).to.haveOwnProperty('firstName');
+        expect(data[0].reviews[0].user).to.haveOwnProperty('lastName');
         done();
       });
   });

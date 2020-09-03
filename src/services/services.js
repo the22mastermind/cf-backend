@@ -43,8 +43,22 @@ const updateProfile = async (model, data, condition) => {
   return profile[1];
 };
 
-const getAllIncludeAll = async (model) => {
-  const data = await model.findAll({ include: [{ all: true }] });
+const getAllIncludeAll = async (model, category, review, user) => {
+  const data = await model.findAll({
+    include: [
+      { model: category, attributes: ['id', 'name', 'description'] },
+      {
+        model: review,
+        attributes: ['id', 'productId', 'userId', 'average', 'vote', 'comment', 'createdAt'],
+        include: [
+          {
+            model: user,
+            attributes: ['firstName', 'lastName'],
+          },
+        ],
+      },
+    ],
+  });
   return data;
 };
 

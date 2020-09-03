@@ -14,7 +14,12 @@ const {
   productsNotFound,
 } = messages;
 const { saveObj, getAllIncludeAll } = service;
-const { review, product } = models;
+const {
+  review,
+  product,
+  category,
+  user,
+} = models;
 const { computeAverage } = miscellaneousHandlers;
 
 export default class User {
@@ -45,7 +50,7 @@ export default class User {
   };
 
   static getAllProducts = async (req, res) => {
-    const products = await getAllIncludeAll(product);
+    const products = await getAllIncludeAll(product, category, review, user);
     if (_.isEmpty(products)) {
       return errorResponse(res, statusCodes.notFound, productsNotFound, null, null);
     }
