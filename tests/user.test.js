@@ -347,6 +347,156 @@ describe('USER FETCH ALL PRODUCTS', () => {
   });
 });
 
+describe('USER PLACE ORDER', () => {
+  it('User fetch own unexistant orders should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.ordersNotFound);
+        done();
+      });
+  });
+  it('User place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrder)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('User place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrderTwo)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('User place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrderThree)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('New user login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'denzel@gmail.com',
+        password: 'denzel@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('New user place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrderThree)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('User place order without contents should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        address: 'Kacyiru, KG 574 St, 33',
+        paymentMode: 'CASH',
+        currency: 'RWF',
+        total: '10000',
+        contents: [],
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.orderEmptyContents);
+        done();
+      });
+  });
+});
+
+describe('USER GET ORDERS', () => {
+  it('User fetch own orders should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.ordersFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0].userId).to.equal(data[0].user.id);
+        expect(data[0].user).to.haveOwnProperty('id');
+        expect(data[0].user).to.haveOwnProperty('firstName');
+        expect(data[0].user).to.haveOwnProperty('lastName');
+        expect(data[0].user).to.haveOwnProperty('phone');
+        expect(data[0].user).to.haveOwnProperty('address');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('id');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productId');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productName');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('quantity');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('cost');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('orderId');
+        expect(data[0].id).to.equal(data[0].orderContents[0].orderId);
+        done();
+      });
+  });
+});
+
 describe('USER FETCH ALL CATEGORIES NOT FOUND', () => {
   beforeEach('Delete all categories', async () => {
     await db.sequelize.query('DELETE FROM reviews');

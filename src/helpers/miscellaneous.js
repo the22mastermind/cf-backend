@@ -56,6 +56,15 @@ const computeAverage = async (total, count) => {
   return average;
 };
 
+const orderItemsParser = async (items, orderId) => {
+  const contents = [];
+  items.forEach((item) => {
+    const row = { ...item, orderId };
+    contents.push(row);
+  });
+  return contents;
+};
+
 export default {
   createToken,
   returnErrorMessages,
@@ -64,4 +73,5 @@ export default {
   hashPassword,
   isPasswordValid,
   computeAverage,
+  orderItemsParser,
 };

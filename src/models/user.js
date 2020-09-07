@@ -86,6 +86,11 @@ export default (sequelize, DataTypes) => {
       onUpdate: 'CASCADE',
       onDelete: 'SET NULL',
     });
+    user.hasMany(models.order, {
+      foreignKey: 'userId',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
   };
   return user;
 };

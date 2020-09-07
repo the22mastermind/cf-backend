@@ -56,14 +56,19 @@ const adminValidator = (data, type) => {
   });
 };
 
-const userValidator = (data) => {
-  const schema = Joi.object({
+const userValidator = (data, type) => {
+  const schema = type === 'reviews' ? Joi.object({
     vote: handleValidations(/^((0)|(0.5)|(1.0)|(1.5)|(2.0)|(2.5)|(3.0)|(3.5)|(4.0)|(4.5)|(5.0))$/, { 'string.pattern.base': messages.reviewAddInvalidVote }, false),
     comment: handleValidations(/^([a-zA-Z,.\n ]{0,300})$/, { 'string.pattern.base': messages.reviewAddInvalidComment }, false),
+  }) : Joi.object({
+    total: handleValidations(/^([0-9]{3,6})$/, { 'string.pattern.base': messages.orderInvalidTotal }, false),
+    currency: handleValidations(/^(RWF|CFA|USD)$/, { 'string.pattern.base': messages.orderInvalidCurrency }, false),
+    paymentMode: handleValidations(/^(MOMO|CASH|CARD)$/, { 'string.pattern.base': messages.orderInvalidPayment }, false),
+    address: handleValidations(/^[0-9a-zA-Z, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, false),
   });
   return schema.validate(data, {
     abortEarly: false,
-    allowUnknown: false,
+    allowUnknown: true,
   });
 };
 

@@ -64,6 +64,15 @@ const messages = {
   reviewAddEmptyComment: 'comment is not allowed to be empty',
   reviewAddInvalidVote: 'Vote must be between 0-5 with a 0.5 interval',
   reviewAddEmptyVote: 'vote is not allowed to be empty',
+  orderPlaced: 'Order placed successfully',
+  orderNotPlaced: 'Cannot place an order at this time. Try again later',
+  orderEmptyContents: 'Your order must contain products',
+  ordersFound: 'Orders retrieved successfully',
+  ordersNotFound: 'No orders found at the moment',
+  orderInvalidTotal: 'Please provide a valid value for the total',
+  orderInvalidCurrency: 'Currency must be one of RWF, CFA, USD',
+  orderInvalidPayment: 'Payment mode must be one of CARD, MOMO, CASH',
+  orderInvalidContents: 'Contents must have at least a productId, productName, quantity, and cost',
 };
 
 export default messages;
