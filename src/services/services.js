@@ -62,6 +62,28 @@ const getAllIncludeAll = async (model, category, review, user) => {
   return data;
 };
 
+const saveRows = async (model, data) => {
+  const savedRows = await model.bulkCreate(data);
+  return savedRows;
+};
+
+const getMyOrders = async (model, condition, orderContent, user) => {
+  const data = await model.findAll({
+    where: { userId: condition },
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: orderContent },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -73,4 +95,6 @@ export default {
   getColumnSum,
   updateProfile,
   getAllIncludeAll,
+  saveRows,
+  getMyOrders,
 };

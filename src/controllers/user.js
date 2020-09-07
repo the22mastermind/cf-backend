@@ -1,10 +1,12 @@
 import _ from 'lodash';
+import moment from 'moment';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 import models from '../models';
 import miscellaneousHandlers from '../helpers/miscellaneous';
+import orderStatus from '../utils/orderStatus';
 
 const { successResponse, errorResponse } = responseHandler;
 const {
@@ -12,15 +14,25 @@ const {
   reviewAdded,
   productsFound,
   productsNotFound,
+  orderPlaced,
+  ordersFound,
+  ordersNotFound,
 } = messages;
-const { saveObj, getAllIncludeAll } = service;
+const {
+  saveObj,
+  getAllIncludeAll,
+  saveRows,
+  getMyOrders,
+} = service;
 const {
   review,
   product,
   category,
   user,
+  order,
+  orderContent,
 } = models;
-const { computeAverage } = miscellaneousHandlers;
+const { computeAverage, orderItemsParser } = miscellaneousHandlers;
 
 export default class User {
   static getSingleProduct = async (req, res) => {
@@ -55,5 +67,32 @@ export default class User {
       return errorResponse(res, statusCodes.notFound, productsNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, productsFound, null, products);
+  };
+
+  static placeOrder = async (req, res) => {
+    const orderData = {
+      txId: moment().format('x'),
+      userId: req.userData.id,
+      status: orderStatus.PLACED,
+      total: parseInt(req.body.total, 10),
+      currency: req.body.currency,
+      paymentMode: req.body.paymentMode,
+      address: req.body.address,
+    };
+    const savedOrder = await saveObj(order, orderData);
+    const orderId = savedOrder.id;
+    const { contents } = req.body;
+    const contentsData = await orderItemsParser(contents, orderId);
+    await saveRows(orderContent, contentsData);
+    return successResponse(res, statusCodes.created, orderPlaced, null, null);
+  };
+
+  static getOrders = async (req, res) => {
+    const userId = req.userData.id;
+    const orders = await getMyOrders(order, userId, orderContent, user);
+    if (_.isEmpty(orders)) {
+      return errorResponse(res, statusCodes.notFound, ordersNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, ordersFound, null, orders);
   };
 };
