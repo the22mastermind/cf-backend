@@ -38,7 +38,7 @@ const getColumnSum = async (model, column) => {
   return total;
 };
 
-const updateProfile = async (model, data, condition) => {
+const updateModel = async (model, data, condition) => {
   const profile = await model.update(data, { where: condition, returning: true, plain: true });
   return profile[1];
 };
@@ -109,7 +109,7 @@ export default {
   getAll,
   getProductsByCategory,
   getColumnSum,
-  updateProfile,
+  updateModel,
   getAllIncludeAll,
   saveRows,
   getMyOrders,

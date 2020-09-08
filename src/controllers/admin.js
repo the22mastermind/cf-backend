@@ -21,7 +21,7 @@ const {
 const {
   deleteItem,
   saveObj,
-  updateProfile,
+  updateModel,
   getAllOrders,
 } = service;
 const {
@@ -117,7 +117,7 @@ export default class Admin {
     const { status } = req.body;
     const condition = { id: req.params.id };
     const data = { status };
-    const updatedData = await updateProfile(order, data, condition);
+    const updatedData = await updateModel(order, data, condition);
     return successResponse(res, statusCodes.success, orderUpdateStatus, null, updatedData);
   };
 
