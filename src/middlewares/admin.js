@@ -7,8 +7,8 @@ import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 import service from '../services/services';
 
-const { vendor, category } = models;
-const { adminValidator, idValidator } = validations;
+const { vendor, category, order } = models;
+const { adminValidator, idValidator, orderStatusValidator } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
@@ -74,6 +74,24 @@ const findCategoryById = async (req, res, next) => {
   return next();
 };
 
+const validateOrderStatus = async (req, res, next) => {
+  const { error } = orderStatusValidator(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const checkOrder = async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const orderData = await findById(order, id);
+  if (!orderData) {
+    return errorResponse(res, statusCodes.notFound, messages.orderNotFound);
+  }
+  if (orderData.dataValues.status === status) {
+    return errorResponse(res, statusCodes.conflict, messages.orderUpdateStatusConflict);
+  }
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -82,4 +100,6 @@ export default {
   paramsValidation,
   categoryExists,
   findCategoryById,
+  validateOrderStatus,
+  checkOrder,
 };

@@ -9,6 +9,8 @@ const {
   createCategory,
   deleteCategory,
   addProduct,
+  updateOrderStatus,
+  fetchAllOrders,
 } = admin;
 const {
   userExists,
@@ -22,6 +24,8 @@ const {
   paramsValidation,
   categoryExists,
   findCategoryById,
+  validateOrderStatus,
+  checkOrder,
 } = adminMiddleware;
 const adminRoutes = express.Router();
 
@@ -30,5 +34,7 @@ adminRoutes.get('/vendor/:id', paramsValidation, findVendorById, checkTokenAndUs
 adminRoutes.post('/category', adminValidation, checkTokenAndUser, isAdmin, categoryExists, createCategory);
 adminRoutes.delete('/category/:id', paramsValidation, checkTokenAndUser, isAdmin, findCategoryById, deleteCategory);
 adminRoutes.post('/category/:id/product', paramsValidation, adminValidation, checkTokenAndUser, isAdmin, findCategoryById, addProduct);
+adminRoutes.patch('/orders/:id', paramsValidation, validateOrderStatus, checkTokenAndUser, isAdmin, checkOrder, updateOrderStatus);
+adminRoutes.get('/orders', checkTokenAndUser, isAdmin, fetchAllOrders);
 
 export default adminRoutes;

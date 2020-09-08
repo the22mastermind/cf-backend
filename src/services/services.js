@@ -38,7 +38,7 @@ const getColumnSum = async (model, column) => {
   return total;
 };
 
-const updateProfile = async (model, data, condition) => {
+const updateModel = async (model, data, condition) => {
   const profile = await model.update(data, { where: condition, returning: true, plain: true });
   return profile[1];
 };
@@ -84,6 +84,22 @@ const getMyOrders = async (model, condition, orderContent, user) => {
   return data;
 };
 
+const getAllOrders = async (model, orderContent, user) => {
+  const data = await model.findAll({
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: orderContent },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -93,8 +109,9 @@ export default {
   getAll,
   getProductsByCategory,
   getColumnSum,
-  updateProfile,
+  updateModel,
   getAllIncludeAll,
   saveRows,
   getMyOrders,
+  getAllOrders,
 };

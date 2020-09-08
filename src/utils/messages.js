@@ -73,6 +73,11 @@ const messages = {
   orderInvalidCurrency: 'Currency must be one of RWF, CFA, USD',
   orderInvalidPayment: 'Payment mode must be one of CARD, MOMO, CASH',
   orderInvalidContents: 'Contents must have at least a productId, productName, quantity, and cost',
+  orderNotFound: 'Order not found',
+  orderUpdateStatus: 'Order status updated successfully',
+  orderUpdateStatusConflict: 'Order status already updated',
+  orderUpdateStatusInvalid: 'Status must be one of PROCESSING, ONTHEWAY, COMPLETED, or CANCELED',
+  orderUpdateStatusEmpty: 'status is required',
 };
 
 export default messages;

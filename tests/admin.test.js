@@ -525,3 +525,38 @@ describe('ADMIN ADD PRODUCT', () => {
       });
   });
 });
+
+describe('ADMIN FETCH ALL ORDERS', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Admin fetch all orders should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/admin/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.ordersNotFound);
+        done();
+      });
+  });
+});

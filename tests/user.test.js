@@ -13,6 +13,7 @@ const {
   badRequest,
   created,
   conflict,
+  forbidden,
 } = statusCodes;
 const baseUrl = '/categories';
 
@@ -20,6 +21,7 @@ chai.use(chaiHttp);
 chai.should();
 
 let userToken = null;
+let adminToken = null;
 
 describe('USER FETCH ALL CATEGORIES', () => {
   it('User login should return 200', (done) => {
@@ -528,6 +530,157 @@ describe('USER FETCH ALL CATEGORIES NOT FOUND', () => {
         expect(res.status).to.equal(notFound);
         expect(error);
         expect(error).to.equal(messages.productsNotFound);
+        done();
+      });
+  });
+});
+
+describe('ADMIN UPDATE & FETCH ORDERS', () => {
+  it('User change order status should return 403', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(forbidden);
+        expect(error);
+        expect(error).to.equal(messages.adminOnlyResource);
+        done();
+      });
+  });
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        adminToken = token;
+        expect(adminToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Admin change order status with invalid order id should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/hahah')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
+        done();
+      });
+  });
+  it('Admin change order status with unexistant order id should return 404', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/999')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.orderNotFound);
+        done();
+      });
+  });
+  it('Admin change order status without status should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/2')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.orderUpdateStatusEmpty);
+        done();
+      });
+  });
+  it('Admin change order status should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/2')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.orderUpdateStatus);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('txId');
+        expect(data).to.haveOwnProperty('total');
+        expect(data).to.haveOwnProperty('paymentMode');
+        expect(data).to.haveOwnProperty('currency');
+        expect(data).to.haveOwnProperty('address');
+        expect(data).to.haveOwnProperty('userId');
+        expect(data).to.haveOwnProperty('status');
+        done();
+      });
+  });
+  it('Admin change order status again should return 409', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/orders/2')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.orderUpdateStatusConflict);
+        done();
+      });
+  });
+  it('Admin fetch all orders should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/admin/orders')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.ordersFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0].userId).to.equal(data[0].user.id);
+        expect(data[0].user).to.haveOwnProperty('id');
+        expect(data[0].user).to.haveOwnProperty('firstName');
+        expect(data[0].user).to.haveOwnProperty('lastName');
+        expect(data[0].user).to.haveOwnProperty('phone');
+        expect(data[0].user).to.haveOwnProperty('address');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('id');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productId');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productName');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('quantity');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('cost');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('orderId');
+        expect(data[0].id).to.equal(data[0].orderContents[0].orderId);
         done();
       });
   });

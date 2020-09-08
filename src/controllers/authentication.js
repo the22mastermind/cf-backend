@@ -15,7 +15,7 @@ const {
   validLoginCreds,
 } = messages;
 const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
-const { saveObj, updateProfile } = service;
+const { saveObj, updateModel } = service;
 const { user } = models;
 
 export default class Authentication {
@@ -47,17 +47,17 @@ export default class Authentication {
   static userUpdateProfile = async (req, res) => {
     const condition = { id: req.userData.id };
     if (req.updateData.isVerified) {
-      await updateProfile(user, req.updateData, condition);
+      await updateModel(user, req.updateData, condition);
       return successResponse(res, statusCodes.success, validProfileUpdate, null, null);
     }
     if (req.updateData.profileComplete) {
-      await updateProfile(user, req.updateData, condition);
+      await updateModel(user, req.updateData, condition);
       return successResponse(res, statusCodes.success, profileUpdateCompleted, null, null);
     }
     if (!req.userData.isVerified) {
       return errorResponse(res, statusCodes.unauthorized, messages.userNotVerified);
     }
-    const { dataValues } = await updateProfile(user, req.updateData, condition);
+    const { dataValues } = await updateModel(user, req.updateData, condition);
     const data = _.omit(dataValues, 'password');
     return successResponse(res, statusCodes.success, validProfileUpdate, null, data);
   };

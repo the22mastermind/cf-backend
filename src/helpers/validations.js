@@ -82,9 +82,20 @@ const idValidator = (data) => {
   });
 };
 
+const orderStatusValidator = (data) => {
+  const schema = Joi.object({
+    status: handleValidations(/^(processing|ontheway|completed|canceled)$/, { 'string.pattern.base': messages.orderUpdateStatusInvalid }, false),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
   idValidator,
   userValidator,
+  orderStatusValidator,
 };
