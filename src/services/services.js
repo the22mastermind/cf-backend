@@ -84,6 +84,22 @@ const getMyOrders = async (model, condition, orderContent, user) => {
   return data;
 };
 
+const getAllOrders = async (model, orderContent, user) => {
+  const data = await model.findAll({
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: orderContent },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -97,4 +113,5 @@ export default {
   getAllIncludeAll,
   saveRows,
   getMyOrders,
+  getAllOrders,
 };

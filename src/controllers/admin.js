@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
@@ -6,23 +7,30 @@ import userStatus from '../utils/userStatus';
 import service from '../services/services';
 import models from '../models';
 
-const { successResponse } = responseHandler;
+const { successResponse, errorResponse } = responseHandler;
 const {
   adminVendorAddSuccess,
   adminVendorFetchSuccess,
   adminAddCategory,
   adminDeleteCategory,
   productAddSuccess,
+  orderUpdateStatus,
+  ordersNotFound,
+  ordersFound,
 } = messages;
 const {
   deleteItem,
   saveObj,
+  updateProfile,
+  getAllOrders,
 } = service;
 const {
   category,
   product,
   vendor,
   user,
+  order,
+  orderContent,
 } = models;
 
 export default class Admin {
@@ -103,5 +111,21 @@ export default class Admin {
     };
     const savedObj = await saveObj(product, data);
     return successResponse(res, statusCodes.created, productAddSuccess, null, savedObj);
+  };
+
+  static updateOrderStatus = async (req, res) => {
+    const { status } = req.body;
+    const condition = { id: req.params.id };
+    const data = { status };
+    const updatedData = await updateProfile(order, data, condition);
+    return successResponse(res, statusCodes.success, orderUpdateStatus, null, updatedData);
+  };
+
+  static fetchAllOrders = async (req, res) => {
+    const data = await getAllOrders(order, orderContent, user);
+    if (_.isEmpty(data)) {
+      return errorResponse(res, statusCodes.notFound, ordersNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, ordersFound, null, data);
   };
 };
