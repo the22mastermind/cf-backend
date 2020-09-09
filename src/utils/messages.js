@@ -76,8 +76,13 @@ const messages = {
   orderNotFound: 'Order not found',
   orderUpdateStatus: 'Order status updated successfully',
   orderUpdateStatusConflict: 'Order status already updated',
-  orderUpdateStatusInvalid: 'Status must be one of PROCESSING, ONTHEWAY, COMPLETED, or CANCELED',
+  orderUpdateStatusInvalid: 'status must be one of processing, ontheway, completed, or canceled',
   orderUpdateStatusEmpty: 'status is required',
+  subscriptionUpdateStatus: 'Subscription status updated successfully',
+  subscriptionUpdateStatusConflict: 'Subscription status already set to that value',
+  subscriptionUpdateStatusNotFound: 'No subscription found for the user provided',
+  subscriptionUpdateStatusInvalid: 'status must be one of active, pending, expired, or canceled',
+  userNotExist: 'User not found',
 };
 
 export default messages;

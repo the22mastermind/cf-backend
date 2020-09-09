@@ -17,6 +17,7 @@ const {
   orderUpdateStatus,
   ordersNotFound,
   ordersFound,
+  subscriptionUpdateStatus,
 } = messages;
 const {
   deleteItem,
@@ -31,6 +32,7 @@ const {
   user,
   order,
   orderContent,
+  subscription,
 } = models;
 
 export default class Admin {
@@ -127,5 +129,13 @@ export default class Admin {
       return errorResponse(res, statusCodes.notFound, ordersNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, ordersFound, null, data);
+  };
+
+  static updateSubscriptionStatus = async (req, res) => {
+    const { status } = req.body;
+    const condition = { id: req.subscriptionData.id };
+    const data = { status };
+    const updatedData = await updateModel(subscription, data, condition);
+    return successResponse(res, statusCodes.success, subscriptionUpdateStatus, null, updatedData);
   };
 };

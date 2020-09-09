@@ -560,3 +560,92 @@ describe('ADMIN FETCH ALL ORDERS', () => {
       });
   });
 });
+
+describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
+  it('Admin approving user subscription status should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.subscriptionUpdateStatus);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('userId');
+        expect(data).to.haveOwnProperty('planId');
+        expect(data).to.haveOwnProperty('days');
+        expect(data).to.haveOwnProperty('allergies');
+        expect(data).to.haveOwnProperty('vegan');
+        expect(data).to.haveOwnProperty('people');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('active');
+        expect(data).to.haveOwnProperty('expiresOn');
+        done();
+      });
+  });
+  it('Admin update user subscription status to existing status should return 409', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusConflict);
+        done();
+      });
+  });
+  it('Admin update user subscription status to existing status should return 409', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/4')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusNotFound);
+        done();
+      });
+  });
+  it('Invalid subscription status should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'something' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusInvalid);
+        done();
+      });
+  });
+  it('Admin update user subscription without status should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.orderUpdateStatusEmpty);
+        done();
+      });
+  });
+});

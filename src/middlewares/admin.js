@@ -7,8 +7,19 @@ import responseHandler from '../helpers/responseHandler';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 import service from '../services/services';
 
-const { vendor, category, order } = models;
-const { adminValidator, idValidator, orderStatusValidator } = validations;
+const {
+  vendor,
+  category,
+  order,
+  user,
+  subscription,
+} = models;
+const {
+  adminValidator,
+  idValidator,
+  orderStatusValidator,
+  subscriptionValidator,
+} = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
 const { ADMIN } = userRoles;
@@ -92,6 +103,35 @@ const checkOrder = async (req, res, next) => {
   return next();
 };
 
+const validateSubscription = async (req, res, next) => {
+  const { error } = subscriptionValidator(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const findUserById = async (req, res, next) => {
+  const { id } = req.params;
+  const userInfo = await findById(user, id);
+  if (!userInfo) {
+    return errorResponse(res, statusCodes.notFound, messages.userNotExist);
+  }
+  req.userInfo = userInfo.dataValues;
+  return next();
+};
+
+const findSubscription = async (req, res, next) => {
+  const userId = req.userInfo.id;
+  const { status } = req.body;
+  const subscriptionData = await findByCondition(subscription, { userId });
+  if (!subscriptionData) {
+    return errorResponse(res, statusCodes.notFound, messages.subscriptionUpdateStatusNotFound);
+  }
+  if (subscriptionData.dataValues.status === status) {
+    return errorResponse(res, statusCodes.conflict, messages.subscriptionUpdateStatusConflict);
+  }
+  req.subscriptionData = subscriptionData.dataValues;
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -102,4 +142,7 @@ export default {
   findCategoryById,
   validateOrderStatus,
   checkOrder,
+  validateSubscription,
+  findUserById,
+  findSubscription,
 };
