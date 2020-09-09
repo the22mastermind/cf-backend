@@ -604,7 +604,7 @@ describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
         done();
       });
   });
-  it('Admin update user subscription status to existing status should return 409', (done) => {
+  it('Admin update subscription status of user who does not have a subscription should return 404', (done) => {
     chai
       .request(server)
       .patch('/admin/subscriptions/users/4')
@@ -645,6 +645,21 @@ describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
         expect(res.status).to.equal(badRequest);
         expect(error);
         expect(error).to.equal(messages.orderUpdateStatusEmpty);
+        done();
+      });
+  });
+  it('Admin update subscription status of unexistant user should return 404', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/999')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.userNotExist);
         done();
       });
   });
