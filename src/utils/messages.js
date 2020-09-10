@@ -83,6 +83,10 @@ const messages = {
   subscriptionUpdateStatusNotFound: 'No subscription found for the user provided',
   subscriptionUpdateStatusInvalid: 'status must be one of active, pending, expired, or canceled',
   userNotExist: 'User not found',
+  subscriptionsNotFound: 'No subscriptions found at the moment',
+  subscriptionsFound: 'Subscriptions retrieved successfully',
+  plansFound: 'Subscription plans retrieved successfully',
+  plansNotFound: 'No subscription plans found at the moment',
 };
 
 export default messages;

@@ -12,6 +12,8 @@ const {
   updateOrderStatus,
   fetchAllOrders,
   updateSubscriptionStatus,
+  fetchAllSubscriptions,
+  getSubscriptionsByPlan,
 } = admin;
 const {
   userExists,
@@ -41,5 +43,7 @@ adminRoutes.post('/category/:id/product', paramsValidation, adminValidation, che
 adminRoutes.patch('/orders/:id', paramsValidation, validateOrderStatus, checkTokenAndUser, isAdmin, checkOrder, updateOrderStatus);
 adminRoutes.get('/orders', checkTokenAndUser, isAdmin, fetchAllOrders);
 adminRoutes.patch('/subscriptions/users/:id', paramsValidation, validateSubscription, findUserById, findSubscription, checkTokenAndUser, isAdmin, updateSubscriptionStatus);
+adminRoutes.get('/subscriptions', checkTokenAndUser, isAdmin, fetchAllSubscriptions);
+adminRoutes.get('/plans/:id/subscriptions', paramsValidation, checkTokenAndUser, isAdmin, getSubscriptionsByPlan);
 
 export default adminRoutes;

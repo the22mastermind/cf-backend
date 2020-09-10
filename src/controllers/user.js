@@ -17,12 +17,15 @@ const {
   orderPlaced,
   ordersFound,
   ordersNotFound,
+  plansFound,
+  plansNotFound,
 } = messages;
 const {
   saveObj,
   getAllIncludeAll,
   saveRows,
   getMyOrders,
+  getAll,
 } = service;
 const {
   review,
@@ -31,6 +34,7 @@ const {
   user,
   order,
   orderContent,
+  plan,
 } = models;
 const { computeAverage, orderItemsParser } = miscellaneousHandlers;
 
@@ -94,5 +98,13 @@ export default class User {
       return errorResponse(res, statusCodes.notFound, ordersNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, ordersFound, null, orders);
+  };
+
+  static getPlans = async (req, res) => {
+    const { rows } = await getAll(plan);
+    if (_.isEmpty(rows)) {
+      return errorResponse(res, statusCodes.notFound, plansNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, plansFound, null, rows);
   };
 };

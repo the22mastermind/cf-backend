@@ -19,12 +19,16 @@ const {
   ordersNotFound,
   ordersFound,
   subscriptionUpdateStatus,
+  subscriptionsNotFound,
+  subscriptionsFound,
 } = messages;
 const {
   deleteItem,
   saveObj,
   updateModel,
   getAllOrders,
+  getSubscriptions,
+  getSubsByCondition,
 } = service;
 const {
   category,
@@ -34,6 +38,7 @@ const {
   order,
   orderContent,
   subscription,
+  plan,
 } = models;
 
 export default class Admin {
@@ -139,5 +144,22 @@ export default class Admin {
     const data = { status, expiresOn };
     const updatedData = await updateModel(subscription, data, condition);
     return successResponse(res, statusCodes.success, subscriptionUpdateStatus, null, updatedData);
+  };
+
+  static fetchAllSubscriptions = async (req, res) => {
+    const subscriptionsData = await getSubscriptions(subscription, plan, user);
+    if (_.isEmpty(subscriptionsData)) {
+      return errorResponse(res, statusCodes.notFound, subscriptionsNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, subscriptionsFound, null, subscriptionsData);
+  };
+
+  static getSubscriptionsByPlan = async (req, res) => {
+    const condition = { planId: req.params.id };
+    const subscriptionsData = await getSubsByCondition(subscription, plan, condition, user);
+    if (_.isEmpty(subscriptionsData)) {
+      return errorResponse(res, statusCodes.notFound, subscriptionsNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, subscriptionsFound, null, subscriptionsData);
   };
 };

@@ -10,6 +10,7 @@ const {
   getAllProducts,
   placeOrder,
   getOrders,
+  getPlans,
 } = user;
 const {
   checkTokenAndUser,
@@ -31,5 +32,6 @@ userRoutes.post('/product/:id/reviews', paramsValidation, userValidation, checkT
 userRoutes.get('/products', checkTokenAndUser, getAllProducts);
 userRoutes.post('/orders', userValidation, hasContents, checkTokenAndUser, placeOrder);
 userRoutes.get('/orders', checkTokenAndUser, getOrders);
+userRoutes.get('/plans', checkTokenAndUser, getPlans);
 
 export default userRoutes;
