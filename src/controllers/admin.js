@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import moment from 'moment';
 import statusCodes from '../utils/statusCodes';
 import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
@@ -133,8 +134,9 @@ export default class Admin {
 
   static updateSubscriptionStatus = async (req, res) => {
     const { status } = req.body;
+    const expiresOn = moment().add(1, 'month').format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
     const condition = { id: req.subscriptionData.id };
-    const data = { status };
+    const data = { status, expiresOn };
     const updatedData = await updateModel(subscription, data, condition);
     return successResponse(res, statusCodes.success, subscriptionUpdateStatus, null, updatedData);
   };

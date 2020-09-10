@@ -562,6 +562,24 @@ describe('ADMIN FETCH ALL ORDERS', () => {
 });
 
 describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
   it('Admin approving user subscription status should return 200', (done) => {
     chai
       .request(server)
