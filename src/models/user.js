@@ -68,12 +68,6 @@ export default (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
     },
-    subscription: {
-      type: DataTypes.STRING,
-    },
-    subscriptionExpires: {
-      type: DataTypes.STRING,
-    },
   });
   user.associate = (models) => {
     user.hasOne(models.vendor, {
@@ -87,6 +81,11 @@ export default (sequelize, DataTypes) => {
       onDelete: 'SET NULL',
     });
     user.hasMany(models.order, {
+      foreignKey: 'userId',
+      onUpdate: 'CASCADE',
+      onDelete: 'CASCADE',
+    });
+    user.hasOne(models.subscription, {
       foreignKey: 'userId',
       onUpdate: 'CASCADE',
       onDelete: 'CASCADE',

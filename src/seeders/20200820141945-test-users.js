@@ -1,4 +1,3 @@
-import moment from 'moment';
 import userRoles from '../utils/userRoles';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 
@@ -18,8 +17,6 @@ module.exports = {
         profileComplete: true,
         isVerified: false,
         address: 'Kacyiru, KG 7 Ave, 1',
-        subscription: 'Premium',
-        subscriptionExpires: moment().add(3, 'months').format('MM-DD-YYYY'),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -33,8 +30,6 @@ module.exports = {
         profileComplete: true,
         isVerified: true,
         address: 'Kacyiru, KG 7 Ave, 2',
-        subscription: 'Premium',
-        subscriptionExpires: moment().add(1, 'months').format('MM-DD-YYYY'),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -48,8 +43,6 @@ module.exports = {
         profileComplete: true,
         isVerified: false,
         address: 'Kacyiru, KG 7 Ave, 2',
-        subscription: 'Premium',
-        subscriptionExpires: moment().add(2, 'months').format('MM-DD-YYYY'),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -63,8 +56,6 @@ module.exports = {
         profileComplete: true,
         isVerified: true,
         address: 'Kacyiru, KG 7 Ave, 2',
-        subscription: '',
-        subscriptionExpires: '',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -78,8 +69,6 @@ module.exports = {
         profileComplete: true,
         isVerified: true,
         address: 'Kacyiru, KG 7 Ave, 2',
-        subscription: 'Premium',
-        subscriptionExpires: moment().add(1, 'months').format('MM-DD-YYYY'),
         createdAt: new Date(),
         updatedAt: new Date(),
       },
@@ -93,8 +82,6 @@ module.exports = {
         profileComplete: true,
         isVerified: true,
         address: 'Kacyiru, KG 7 Ave, 2',
-        subscription: 'Premium',
-        subscriptionExpires: moment().add(1, 'months').format('MM-DD-YYYY'),
         createdAt: new Date(),
         updatedAt: new Date(),
       },

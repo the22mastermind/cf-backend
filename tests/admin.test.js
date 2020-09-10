@@ -4,6 +4,7 @@ import server from '../src/server';
 import statusCodes from '../src/utils/statusCodes';
 import messages from '../src/utils/messages';
 import sample from './samples/admin';
+import db from '../src/models';
 
 const {
   badRequest,
@@ -556,6 +557,300 @@ describe('ADMIN FETCH ALL ORDERS', () => {
         expect(res.status).to.equal(notFound);
         expect(error);
         expect(error).to.equal(messages.ordersNotFound);
+        done();
+      });
+  });
+});
+
+describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Admin approving user subscription status should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.subscriptionUpdateStatus);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('userId');
+        expect(data).to.haveOwnProperty('planId');
+        expect(data).to.haveOwnProperty('days');
+        expect(data).to.haveOwnProperty('allergies');
+        expect(data).to.haveOwnProperty('vegan');
+        expect(data).to.haveOwnProperty('people');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('active');
+        expect(data).to.haveOwnProperty('expiresOn');
+        done();
+      });
+  });
+  it('Admin update user subscription status to existing status should return 409', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusConflict);
+        done();
+      });
+  });
+  it('Admin update subscription status of user who does not have a subscription should return 404', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/4')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusNotFound);
+        done();
+      });
+  });
+  it('Invalid subscription status should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'something' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionUpdateStatusInvalid);
+        done();
+      });
+  });
+  it('Admin update user subscription without status should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/2')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.orderUpdateStatusEmpty);
+        done();
+      });
+  });
+  it('Admin update subscription status of unexistant user should return 404', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/subscriptions/users/999')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ status: 'active' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.userNotExist);
+        done();
+      });
+  });
+});
+
+describe('ADMIN FETCH SUBSCRIPTIONS', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Admin fetch all subscriptions should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/admin/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.subscriptionsFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('userId');
+        expect(data[0]).to.haveOwnProperty('planId');
+        expect(data[0]).to.haveOwnProperty('days');
+        expect(data[0]).to.haveOwnProperty('allergies');
+        expect(data[0]).to.haveOwnProperty('vegan');
+        expect(data[0]).to.haveOwnProperty('people');
+        expect(data[0]).to.haveOwnProperty('status');
+        expect(data[0]).to.haveOwnProperty('expiresOn');
+        expect(data[0].planId).to.equal(data[0].plan.id);
+        expect(data[0].userId).to.equal(data[0].user.id);
+        done();
+      });
+  });
+  it('Admin fetch subscriptions by plan should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/admin/plans/1/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.subscriptionsFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('userId');
+        expect(data[0]).to.haveOwnProperty('planId');
+        expect(data[0]).to.haveOwnProperty('days');
+        expect(data[0]).to.haveOwnProperty('allergies');
+        expect(data[0]).to.haveOwnProperty('vegan');
+        expect(data[0]).to.haveOwnProperty('people');
+        expect(data[0]).to.haveOwnProperty('status');
+        expect(data[0]).to.haveOwnProperty('expiresOn');
+        expect(data[0].planId).to.equal(data[0].plan.id);
+        expect(data[0].userId).to.equal(data[0].user.id);
+        done();
+      });
+  });
+  it('Should delete all subscriptions', async () => {
+    await db.sequelize.query('DELETE FROM subscriptions');
+  });
+  it('No subscriptions found should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/admin/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionsNotFound);
+        done();
+      });
+  });
+  it('No subscriptions by plan should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/admin/plans/1/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionsNotFound);
+        done();
+      });
+  });
+  it('Subscriptions for unexisting plan should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/admin/plans/99/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionsNotFound);
+        done();
+      });
+  });
+  it('Subscriptions for invalid plan id should return 400', (done) => {
+    chai
+      .request(server)
+      .get('/admin/plans/abc/subscriptions')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.adminVendorFetchBadId);
+        done();
+      });
+  });
+  it('Fetch subscription plans should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.plansFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('name');
+        expect(data[0]).to.haveOwnProperty('description');
+        expect(data[0]).to.haveOwnProperty('price');
+        expect(data[0]).to.haveOwnProperty('currency');
+        done();
+      });
+  });
+  it('Should delete all subscription plans', async () => {
+    await db.sequelize.query('DELETE FROM plans');
+  });
+  it('No subscription plans should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.plansNotFound);
         done();
       });
   });

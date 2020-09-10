@@ -11,6 +11,9 @@ const {
   addProduct,
   updateOrderStatus,
   fetchAllOrders,
+  updateSubscriptionStatus,
+  fetchAllSubscriptions,
+  getSubscriptionsByPlan,
 } = admin;
 const {
   userExists,
@@ -26,6 +29,9 @@ const {
   findCategoryById,
   validateOrderStatus,
   checkOrder,
+  validateSubscription,
+  findUserById,
+  findSubscription,
 } = adminMiddleware;
 const adminRoutes = express.Router();
 
@@ -36,5 +42,8 @@ adminRoutes.delete('/category/:id', paramsValidation, checkTokenAndUser, isAdmin
 adminRoutes.post('/category/:id/product', paramsValidation, adminValidation, checkTokenAndUser, isAdmin, findCategoryById, addProduct);
 adminRoutes.patch('/orders/:id', paramsValidation, validateOrderStatus, checkTokenAndUser, isAdmin, checkOrder, updateOrderStatus);
 adminRoutes.get('/orders', checkTokenAndUser, isAdmin, fetchAllOrders);
+adminRoutes.patch('/subscriptions/users/:id', paramsValidation, validateSubscription, findUserById, findSubscription, checkTokenAndUser, isAdmin, updateSubscriptionStatus);
+adminRoutes.get('/subscriptions', checkTokenAndUser, isAdmin, fetchAllSubscriptions);
+adminRoutes.get('/plans/:id/subscriptions', paramsValidation, checkTokenAndUser, isAdmin, getSubscriptionsByPlan);
 
 export default adminRoutes;

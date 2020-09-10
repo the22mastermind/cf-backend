@@ -100,6 +100,36 @@ const getAllOrders = async (model, orderContent, user) => {
   return data;
 };
 
+const getSubscriptions = async (model, plan, user) => {
+  const data = await model.findAll({
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: plan },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
+const getSubsByCondition = async (model, plan, condition, user) => {
+  const data = await model.findAll({
+    where: condition,
+    include: [
+      { model: plan },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'email', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -114,4 +144,6 @@ export default {
   saveRows,
   getMyOrders,
   getAllOrders,
+  getSubscriptions,
+  getSubsByCondition,
 };
