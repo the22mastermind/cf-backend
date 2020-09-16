@@ -87,6 +87,8 @@ const messages = {
   subscriptionsFound: 'Subscriptions retrieved successfully',
   plansFound: 'Subscription plans retrieved successfully',
   plansNotFound: 'No subscription plans found at the moment',
+  subscriptionNotFound: 'No subscription found at the moment',
+  subscriptionFound: 'Subscription retrieved successfully',
 };
 
 export default messages;

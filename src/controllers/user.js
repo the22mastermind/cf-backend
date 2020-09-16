@@ -19,6 +19,8 @@ const {
   ordersNotFound,
   plansFound,
   plansNotFound,
+  subscriptionNotFound,
+  subscriptionFound,
 } = messages;
 const {
   saveObj,
@@ -26,6 +28,7 @@ const {
   saveRows,
   getMyOrders,
   getAll,
+  getSubsByCondition,
 } = service;
 const {
   review,
@@ -35,6 +38,7 @@ const {
   order,
   orderContent,
   plan,
+  subscription,
 } = models;
 const { computeAverage, orderItemsParser } = miscellaneousHandlers;
 
@@ -106,5 +110,14 @@ export default class User {
       return errorResponse(res, statusCodes.notFound, plansNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, plansFound, null, rows);
+  };
+
+  static fetchSubscription = async (req, res) => {
+    const condition = { userId: req.userData.id };
+    const data = await getSubsByCondition(subscription, plan, condition, user);
+    if (_.isEmpty(data)) {
+      return errorResponse(res, statusCodes.notFound, subscriptionNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, subscriptionFound, null, data);
   };
 };

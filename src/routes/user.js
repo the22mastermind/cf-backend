@@ -11,6 +11,7 @@ const {
   placeOrder,
   getOrders,
   getPlans,
+  fetchSubscription,
 } = user;
 const {
   checkTokenAndUser,
@@ -33,5 +34,6 @@ userRoutes.get('/products', checkTokenAndUser, getAllProducts);
 userRoutes.post('/orders', userValidation, hasContents, checkTokenAndUser, placeOrder);
 userRoutes.get('/orders', checkTokenAndUser, getOrders);
 userRoutes.get('/plans', checkTokenAndUser, getPlans);
+userRoutes.get('/subscription', checkTokenAndUser, fetchSubscription);
 
 export default userRoutes;

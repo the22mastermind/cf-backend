@@ -684,6 +684,57 @@ describe('ADMIN UPDATE USER SUBSCRIPTION', () => {
   });
 });
 
+describe('USER FETCH OWN SUBSCRIPTION', () => {
+  it('Login user should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'denzel@gmail.com',
+        password: 'denzel@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('User fetch own subscription should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/subscription')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.subscriptionFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('userId');
+        expect(data[0]).to.haveOwnProperty('planId');
+        expect(data[0]).to.haveOwnProperty('days');
+        expect(data[0]).to.haveOwnProperty('allergies');
+        expect(data[0]).to.haveOwnProperty('vegan');
+        expect(data[0]).to.haveOwnProperty('people');
+        expect(data[0]).to.haveOwnProperty('status');
+        expect(data[0]).to.haveOwnProperty('expiresOn');
+        expect(data[0].planId).to.equal(data[0].plan.id);
+        expect(data[0].userId).to.equal(data[0].user.id);
+        expect(data[0].plan).to.haveOwnProperty('id');
+        expect(data[0].plan).to.haveOwnProperty('name');
+        expect(data[0].plan).to.haveOwnProperty('description');
+        done();
+      });
+  });
+});
+
 describe('ADMIN FETCH SUBSCRIPTIONS', () => {
   it('Login admin should return 200', (done) => {
     chai
@@ -851,6 +902,41 @@ describe('ADMIN FETCH SUBSCRIPTIONS', () => {
         expect(res.status).to.equal(notFound);
         expect(error);
         expect(error).to.equal(messages.plansNotFound);
+        done();
+      });
+  });
+});
+
+describe('USER FETCH UNEXISTANT SUBSCRIPTION', () => {
+  it('Login user should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'denzel@gmail.com',
+        password: 'denzel@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('No subscription found should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/subscription')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.subscriptionNotFound);
         done();
       });
   });
