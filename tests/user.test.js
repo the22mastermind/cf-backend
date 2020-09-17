@@ -726,6 +726,7 @@ describe('USER SUBSCRIBE', () => {
   });
   it('Insert sample plan', async () => {
     await db.sequelize.query("INSERT INTO plans VALUES(1, 'BASIC', 'Description of the basic plan', 100000, 'RWF', NOW(), NOW());");
+    await db.sequelize.query("INSERT INTO plans VALUES(2, 'PREMIUM', 'Description of the premium plan', 500000, 'RWF', NOW(), NOW());");
   });
   it('User subscribing to a valid plan should return 201', (done) => {
     chai
@@ -891,6 +892,57 @@ describe('USER SUBSCRIBE', () => {
         expect(res.status).to.equal(badRequest);
         expect(error);
         expect(error).to.equal(messages.peopleInvalid);
+        done();
+      });
+  });
+  it('Login new user should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'deniro@gmail.com',
+        password: 'deniro@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('User subscribing to a valid plan should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/plans/2/subscription')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        vegan: true,
+        allergies: ['Milk'],
+        people: 2,
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.userSubscribe);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('days');
+        expect(data.days).to.be.a('array');
+        expect(data).to.haveOwnProperty('vegan');
+        expect(data.vegan).to.be.a('boolean');
+        expect(data).to.haveOwnProperty('allergies');
+        expect(data.allergies).to.be.a('array');
+        expect(data).to.haveOwnProperty('people');
+        expect(data.people).to.be.a('number');
+        expect(data).to.haveOwnProperty('status');
+        expect(data).to.haveOwnProperty('userId');
+        expect(data).to.haveOwnProperty('planId');
         done();
       });
   });
