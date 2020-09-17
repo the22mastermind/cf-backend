@@ -124,11 +124,10 @@ export default class User {
   };
 
   static userSubscribe = async (req, res) => {
-    const basicDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
-    const premiumDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
     const planId = req.params.id;
     const data = {
-      days: planId === 1 ? basicDays : premiumDays,
+      days,
       vegan: req.body.vegan,
       allergies: req.body.allergies,
       people: parseInt(req.body.people, 10),

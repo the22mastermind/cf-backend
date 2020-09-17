@@ -77,13 +77,11 @@ const checkPlan = async (req, res, next) => {
 const checkSubscription = async (req, res, next) => {
   const condition = req.userData.id;
   const subscriptionData = await findByCondition(subscription, { userId: condition });
-  if (subscriptionData) {
-    if (subscriptionData.dataValues.status === subscriptionStatus.PENDING) {
-      return errorResponse(res, statusCodes.conflict, messages.userSubscribePending);
-    }
-    if (subscriptionData.status === subscriptionStatus.ACTIVE) {
-      return errorResponse(res, statusCodes.conflict, messages.userSubscribeConflict);
-    }
+  if (subscriptionData && (subscriptionData.dataValues.status === subscriptionStatus.PENDING)) {
+    return errorResponse(res, statusCodes.conflict, messages.userSubscribePending);
+  }
+  if (subscriptionData && (subscriptionData.dataValues.status === subscriptionStatus.ACTIVE)) {
+    return errorResponse(res, statusCodes.conflict, messages.userSubscribeConflict);
   }
   return next();
 };
