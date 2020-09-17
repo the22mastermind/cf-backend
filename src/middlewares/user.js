@@ -6,8 +6,14 @@ import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 import validations from '../helpers/validations';
 import miscellaneousHelpers from '../helpers/miscellaneous';
+import subscriptionStatus from '../utils/subscriptionStatus';
 
-const { product, review } = models;
+const {
+  product,
+  review,
+  plan,
+  subscription,
+} = models;
 const { errorResponse } = responseHandler;
 const {
   getAll,
@@ -15,7 +21,7 @@ const {
   getColumnSum,
   findAllById,
 } = service;
-const { userValidator } = validations;
+const { userValidator, validateSubscribe } = validations;
 const { returnErrorMessages } = miscellaneousHelpers;
 
 const userValidation = async (req, res, next) => {
@@ -59,10 +65,41 @@ const hasContents = async (req, res, next) => {
   return next();
 };
 
+const checkPlan = async (req, res, next) => {
+  const condition = req.params.id;
+  const planData = await findByCondition(plan, { id: condition });
+  if (!planData) {
+    return errorResponse(res, statusCodes.notFound, messages.planNotFound);
+  }
+  return next();
+};
+
+const checkSubscription = async (req, res, next) => {
+  const condition = req.userData.id;
+  const subscriptionData = await findByCondition(subscription, { userId: condition });
+  if (subscriptionData) {
+    if (subscriptionData.dataValues.status === subscriptionStatus.PENDING) {
+      return errorResponse(res, statusCodes.conflict, messages.userSubscribePending);
+    }
+    if (subscriptionData.status === subscriptionStatus.ACTIVE) {
+      return errorResponse(res, statusCodes.conflict, messages.userSubscribeConflict);
+    }
+  }
+  return next();
+};
+
+const subscribeValidator = async (req, res, next) => {
+  const { error } = validateSubscribe(req.body);
+  returnErrorMessages(error, res, next);
+};
+
 export default {
   findProductById,
   userValidation,
   findReviews,
   reviewExists,
   hasContents,
+  checkPlan,
+  checkSubscription,
+  subscribeValidator,
 };

@@ -7,6 +7,7 @@ import service from '../services/services';
 import models from '../models';
 import miscellaneousHandlers from '../helpers/miscellaneous';
 import orderStatus from '../utils/orderStatus';
+import subscriptionStatus from '../utils/subscriptionStatus';
 
 const { successResponse, errorResponse } = responseHandler;
 const {
@@ -21,6 +22,7 @@ const {
   plansNotFound,
   subscriptionNotFound,
   subscriptionFound,
+  userSubscribe,
 } = messages;
 const {
   saveObj,
@@ -119,5 +121,22 @@ export default class User {
       return errorResponse(res, statusCodes.notFound, subscriptionNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, subscriptionFound, null, data);
+  };
+
+  static userSubscribe = async (req, res) => {
+    const basicDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
+    const planId = req.params.id;
+    const data = {
+      days: basicDays,
+      vegan: req.body.vegan,
+      allergies: req.body.allergies,
+      people: parseInt(req.body.people, 10),
+      status: subscriptionStatus.PENDING,
+      expiresOn: moment().add(1, 'month').format(moment.HTML5_FMT.DATETIME_LOCAL_MS),
+      userId: req.userData.id,
+      planId,
+    };
+    const savedData = await saveObj(subscription, data);
+    return successResponse(res, statusCodes.created, userSubscribe, null, savedData);
   };
 };
