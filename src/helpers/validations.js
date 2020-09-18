@@ -102,6 +102,28 @@ const subscriptionValidator = (data) => {
   });
 };
 
+const createMessages = (type, message) => ({
+  [`${type}.base`]: message,
+  [`${type}.empty`]: message,
+  [`${type}.format`]: message,
+  'any.required': message,
+  'any.only': message,
+  'any.ref': message,
+});
+
+const validateSubscribe = (data) => {
+  const schema = Joi.object({
+    vegan: Joi.boolean().required().messages(createMessages('boolean', `${messages.veganInvalid}`)),
+    allergies: Joi.array().items(Joi.string().trim()).messages(createMessages('array', `${messages.allergiesInvalid}`)),
+    people: Joi.number().min(1).max(5).required()
+      .messages(createMessages('number', `${messages.peopleInvalid}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -109,4 +131,5 @@ export default {
   userValidator,
   orderStatusValidator,
   subscriptionValidator,
+  validateSubscribe,
 };

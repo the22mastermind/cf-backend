@@ -89,6 +89,13 @@ const messages = {
   plansNotFound: 'No subscription plans found at the moment',
   subscriptionNotFound: 'No subscription found at the moment',
   subscriptionFound: 'Subscription retrieved successfully',
+  veganInvalid: 'Vegan value must be true or false',
+  allergiesInvalid: 'Allergies must be like [Soy,Wheat,...]',
+  peopleInvalid: 'people must be less than or equal to 5',
+  userSubscribe: 'Subscription submitted successfully. We will review it and get back to you shortly',
+  userSubscribePending: 'Subscription already submitted and waiting approval',
+  userSubscribeConflict: 'You cannot have more than one active subscription at a time',
+  planNotFound: 'The subscription plan you selected could not be found at the moment',
 };
 
 export default messages;

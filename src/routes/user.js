@@ -12,6 +12,7 @@ const {
   getOrders,
   getPlans,
   fetchSubscription,
+  userSubscribe,
 } = user;
 const {
   checkTokenAndUser,
@@ -25,6 +26,9 @@ const {
   findReviews,
   reviewExists,
   hasContents,
+  checkPlan,
+  checkSubscription,
+  subscribeValidator,
 } = userMiddleware;
 const userRoutes = express.Router();
 
@@ -35,5 +39,6 @@ userRoutes.post('/orders', userValidation, hasContents, checkTokenAndUser, place
 userRoutes.get('/orders', checkTokenAndUser, getOrders);
 userRoutes.get('/plans', checkTokenAndUser, getPlans);
 userRoutes.get('/subscription', checkTokenAndUser, fetchSubscription);
+userRoutes.post('/plans/:id/subscription', paramsValidation, subscribeValidator, checkTokenAndUser, checkPlan, checkSubscription, userSubscribe);
 
 export default userRoutes;
