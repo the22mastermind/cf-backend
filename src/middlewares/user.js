@@ -21,12 +21,11 @@ const {
   getColumnSum,
   findAllById,
 } = service;
-const { userValidator, validateSubscribe } = validations;
+const { userValidator, validateSubscribe, validatePlaceOrder } = validations;
 const { returnErrorMessages } = miscellaneousHelpers;
 
 const userValidation = async (req, res, next) => {
-  const type = req.path.split('/').pop();
-  const { error } = userValidator(req.body, type);
+  const { error } = userValidator(req.body);
   returnErrorMessages(error, res, next);
 };
 
@@ -57,14 +56,6 @@ const reviewExists = async (req, res, next) => {
   return next();
 };
 
-const hasContents = async (req, res, next) => {
-  const { contents } = req.body;
-  if (_.isEmpty(contents)) {
-    return errorResponse(res, statusCodes.badRequest, messages.orderEmptyContents);
-  }
-  return next();
-};
-
 const checkPlan = async (req, res, next) => {
   const condition = req.params.id;
   const planData = await findByCondition(plan, { id: condition });
@@ -91,13 +82,18 @@ const subscribeValidator = async (req, res, next) => {
   returnErrorMessages(error, res, next);
 };
 
+const placeOrderValidator = async (req, res, next) => {
+  const { error } = validatePlaceOrder(req.body);
+  returnErrorMessages(error, res, next);
+};
+
 export default {
   findProductById,
   userValidation,
   findReviews,
   reviewExists,
-  hasContents,
   checkPlan,
   checkSubscription,
   subscribeValidator,
+  placeOrderValidator,
 };

@@ -350,6 +350,24 @@ describe('USER FETCH ALL PRODUCTS', () => {
 });
 
 describe('USER PLACE ORDER', () => {
+  it('User login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'deniro@gmail.com',
+        password: 'deniro@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
   it('User fetch own unexistant orders should return 404', (done) => {
     chai
       .request(server)
@@ -447,19 +465,28 @@ describe('USER PLACE ORDER', () => {
       .request(server)
       .post('/orders')
       .set('Authorization', `Bearer ${userToken}`)
-      .send({
-        address: 'Kacyiru, KG 574 St, 33',
-        paymentMode: 'CASH',
-        currency: 'RWF',
-        total: '10000',
-        contents: [],
-      })
+      .send(userSample.emptyContentsOrder)
       .end((err, res) => {
         if (err) done(err);
         const { error } = res.body;
         expect(res.status).to.equal(badRequest);
         expect(error);
-        expect(error).to.equal(messages.orderEmptyContents);
+        expect(error).to.equal(messages.orderInvalidContents);
+        done();
+      });
+  });
+  it('User place order with invalid contents should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.invalidContentsOrder)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(`${messages.orderInvalidContents}, ${messages.orderInvalidContents}, ${messages.orderInvalidContents}, ${messages.orderInvalidContents}, ${messages.orderInvalidContents}`);
         done();
       });
   });

@@ -56,19 +56,14 @@ const adminValidator = (data, type) => {
   });
 };
 
-const userValidator = (data, type) => {
-  const schema = type === 'reviews' ? Joi.object({
+const userValidator = (data) => {
+  const schema = Joi.object({
     vote: handleValidations(/^((0)|(0.5)|(1.0)|(1.5)|(2.0)|(2.5)|(3.0)|(3.5)|(4.0)|(4.5)|(5.0))$/, { 'string.pattern.base': messages.reviewAddInvalidVote }, false),
     comment: handleValidations(/^([a-zA-Z,.\n ]{0,300})$/, { 'string.pattern.base': messages.reviewAddInvalidComment }, false),
-  }) : Joi.object({
-    total: handleValidations(/^([0-9]{3,6})$/, { 'string.pattern.base': messages.orderInvalidTotal }, false),
-    currency: handleValidations(/^(RWF|CFA|USD)$/, { 'string.pattern.base': messages.orderInvalidCurrency }, false),
-    paymentMode: handleValidations(/^(MOMO|CASH|CARD)$/, { 'string.pattern.base': messages.orderInvalidPayment }, false),
-    address: handleValidations(/^[0-9a-zA-Z, ]{5,30}$/, { 'string.pattern.base': messages.invalidAddress }, false),
   });
   return schema.validate(data, {
     abortEarly: false,
-    allowUnknown: true,
+    allowUnknown: false,
   });
 };
 
@@ -106,9 +101,17 @@ const createMessages = (type, message) => ({
   [`${type}.base`]: message,
   [`${type}.empty`]: message,
   [`${type}.format`]: message,
+  [`${type}.min`]: message,
+  [`${type}.max`]: message,
   'any.required': message,
   'any.only': message,
   'any.ref': message,
+});
+
+const createArrayMessages = (type, message) => ({
+  [`${type}.min`]: message,
+  'any.required': message,
+  'object.unknown': message,
 });
 
 const validateSubscribe = (data) => {
@@ -124,6 +127,27 @@ const validateSubscribe = (data) => {
   });
 };
 
+const validatePlaceOrder = (data) => {
+  const schema = Joi.object({
+    total: Joi.number().min(1000).max(1000000).required()
+      .messages(createMessages('number', `${messages.orderInvalidTotal}`)),
+    currency: Joi.string().regex(/^(RWF|CFA|USD)$/).required().messages(createMessages('array', `${messages.orderInvalidCurrency}`)),
+    paymentMode: Joi.string().regex(/^(MOMO|CASH|CARD)$/).required().messages(createMessages('array', `${messages.orderInvalidPayment}`)),
+    address: Joi.string().regex(/^[0-9a-zA-Z, ]{5,30}$/).required().messages(createMessages('array', `${messages.invalidAddress}`)),
+    contents: Joi.array().items({
+      productId: Joi.number().required(),
+      productName: Joi.string().required(),
+      quantity: Joi.number().min(1).max(100).required(),
+      cost: Joi.number().min(1000).max(1000000).required(),
+    }).min(1).required()
+      .messages(createArrayMessages('array', `${messages.orderInvalidContents}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -132,4 +156,5 @@ export default {
   orderStatusValidator,
   subscriptionValidator,
   validateSubscribe,
+  validatePlaceOrder,
 };

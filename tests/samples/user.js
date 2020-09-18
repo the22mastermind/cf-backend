@@ -77,6 +77,24 @@ const userSample = {
       },
     ],
   },
+  emptyContentsOrder: {
+    address: 'Kacyiru, KG 8 Ave, 7',
+    paymentMode: 'CARD',
+    currency: 'RWF',
+    total: '11000',
+    contents: [],
+  },
+  invalidContentsOrder: {
+    address: 'Kacyiru, KG 8 Ave, 7',
+    paymentMode: 'CARD',
+    currency: 'RWF',
+    total: '11000',
+    contents: [
+      {
+        a: 'aaaa',
+      },
+    ],
+  },
 };
 
 export default userSample;
