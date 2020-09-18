@@ -501,6 +501,7 @@ describe('ADMIN ADD PRODUCT', () => {
         expect(data).to.haveOwnProperty('id');
         expect(data).to.haveOwnProperty('name');
         expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('available');
         expect(data).to.haveOwnProperty('categoryId');
         done();
       });
@@ -521,6 +522,7 @@ describe('ADMIN ADD PRODUCT', () => {
         expect(data).to.haveOwnProperty('id');
         expect(data).to.haveOwnProperty('name');
         expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('available');
         expect(data).to.haveOwnProperty('categoryId');
         done();
       });
