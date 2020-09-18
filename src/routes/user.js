@@ -25,17 +25,17 @@ const {
   userValidation,
   findReviews,
   reviewExists,
-  hasContents,
   checkPlan,
   checkSubscription,
   subscribeValidator,
+  placeOrderValidator,
 } = userMiddleware;
 const userRoutes = express.Router();
 
 userRoutes.get('/product/:id', paramsValidation, checkTokenAndUser, findProductById, getSingleProduct);
 userRoutes.post('/product/:id/reviews', paramsValidation, userValidation, checkTokenAndUser, findProductById, reviewExists, findReviews, addReview);
 userRoutes.get('/products', checkTokenAndUser, getAllProducts);
-userRoutes.post('/orders', userValidation, hasContents, checkTokenAndUser, placeOrder);
+userRoutes.post('/orders', placeOrderValidator, checkTokenAndUser, placeOrder);
 userRoutes.get('/orders', checkTokenAndUser, getOrders);
 userRoutes.get('/plans', checkTokenAndUser, getPlans);
 userRoutes.get('/subscription', checkTokenAndUser, fetchSubscription);
