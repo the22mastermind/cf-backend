@@ -153,6 +153,7 @@ describe('ADMIN ADD VENDOR', () => {
         expect(data).to.haveOwnProperty('id');
         expect(data).to.haveOwnProperty('userId');
         expect(data).to.haveOwnProperty('status');
+        expect(data).to.haveOwnProperty('tags');
         done();
       });
   });
