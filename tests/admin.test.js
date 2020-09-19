@@ -887,6 +887,9 @@ describe('ADMIN FETCH SUBSCRIPTIONS', () => {
         expect(data[0]).to.haveOwnProperty('description');
         expect(data[0]).to.haveOwnProperty('price');
         expect(data[0]).to.haveOwnProperty('currency');
+        expect(data[0]).to.haveOwnProperty('options');
+        expect(data[0].options).to.be.a('array');
+        expect(data[0].options[0]).to.be.a('string');
         done();
       });
   });
@@ -941,5 +944,144 @@ describe('USER FETCH UNEXISTANT SUBSCRIPTION', () => {
         expect(error).to.equal(messages.subscriptionNotFound);
         done();
       });
+  });
+});
+
+describe('ADMIN CREATE SUBSCRIPTION PLANS', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Create subscription plan with invalid name should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.invalidPlanName)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidPlanName);
+        done();
+      });
+  });
+  it('Create subscription plan with invalid description should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.invalidPlanDescription)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidPlanDesc);
+        done();
+      });
+  });
+  it('Create subscription plan with invalid price should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.invalidPlanPrice)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidPlanPrice);
+        done();
+      });
+  });
+  it('Create subscription plan with invalid currency should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.invalidPlanCurrency)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.orderInvalidCurrency);
+        done();
+      });
+  });
+  it('Create subscription plan with invalid options should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.invalidPlanOptions)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.invalidPlanOptions);
+        done();
+      });
+  });
+  it('Admin create subscription plan should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validPlan)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.planCreated);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('price');
+        expect(data).to.haveOwnProperty('currency');
+        expect(data).to.haveOwnProperty('options');
+        expect(data.options).to.be.a('array');
+        expect(data.options[0]).to.be.a('string');
+        done();
+      });
+  });
+  it('Create subscription plan that already exists should return 409', (done) => {
+    chai
+      .request(server)
+      .post('/admin/plans')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validPlan)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.planConflict);
+        done();
+      });
+  });
+  it('Should delete all subscription plans', async () => {
+    await db.sequelize.query('DELETE FROM plans');
   });
 });

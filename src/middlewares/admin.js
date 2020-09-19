@@ -13,12 +13,14 @@ const {
   order,
   user,
   subscription,
+  plan,
 } = models;
 const {
   adminValidator,
   idValidator,
   orderStatusValidator,
   subscriptionValidator,
+  validateAddPlan,
 } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
@@ -132,6 +134,20 @@ const findSubscription = async (req, res, next) => {
   return next();
 };
 
+const addPlanValidator = async (req, res, next) => {
+  const { error } = validateAddPlan(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const planExists = async (req, res, next) => {
+  const name = req.body.name.toUpperCase();
+  const planData = await findByCondition(plan, { name });
+  if (planData) {
+    return errorResponse(res, statusCodes.conflict, messages.planConflict);
+  }
+  return next();
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -145,4 +161,6 @@ export default {
   validateSubscription,
   findUserById,
   findSubscription,
+  addPlanValidator,
+  planExists,
 };

@@ -21,6 +21,7 @@ const {
   subscriptionUpdateStatus,
   subscriptionsNotFound,
   subscriptionsFound,
+  planCreated,
 } = messages;
 const {
   deleteItem,
@@ -162,5 +163,24 @@ export default class Admin {
       return errorResponse(res, statusCodes.notFound, subscriptionsNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, subscriptionsFound, null, subscriptionsData);
+  };
+
+  static addPlan = async (req, res) => {
+    const {
+      name,
+      description,
+      price,
+      currency,
+      options,
+    } = req.body;
+    const planInfo = {
+      name,
+      description,
+      price,
+      currency,
+      options,
+    };
+    const data = await saveObj(plan, planInfo);
+    return successResponse(res, statusCodes.created, planCreated, null, data);
   };
 };

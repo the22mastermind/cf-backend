@@ -96,6 +96,12 @@ const messages = {
   userSubscribePending: 'Subscription already submitted and waiting approval',
   userSubscribeConflict: 'You cannot have more than one active subscription at a time',
   planNotFound: 'The subscription plan you selected could not be found at the moment',
+  planCreated: 'Subscription plan created successfully',
+  planConflict: 'Subscription plan already exists',
+  invalidPlanName: 'Subscription plan name must be between 3-30 characters, in capital letters, without spaces or symbols',
+  invalidPlanDesc: 'Subscription plan description is required',
+  invalidPlanPrice: 'Subscription plan price must be a number between 10K and 1M',
+  invalidPlanOptions: 'Subscription plan options must be an array of strings',
 };
 
 export default messages;

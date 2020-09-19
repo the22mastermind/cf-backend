@@ -126,6 +126,46 @@ const adminSample = {
     currency: 'CFA',
     image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
   },
+  invalidPlanName: {
+    name: 'aaaaaa',
+    description: 'A good description goes here',
+    price: 100000,
+    currency: 'RWF',
+    options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
+  invalidPlanDescription: {
+    name: 'TESTING',
+    price: 100000,
+    currency: 'RWF',
+    options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
+  invalidPlanPrice: {
+    name: 'TESTING',
+    description: 'A good description goes here',
+    currency: 'RWF',
+    options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
+  invalidPlanCurrency: {
+    name: 'TESTING',
+    description: 'A good description goes here',
+    price: 100000,
+    currency: 'hello',
+    options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
+  invalidPlanOptions: {
+    name: 'TESTING',
+    description: 'A good description goes here',
+    price: 100000,
+    currency: 'RWF',
+    options: 'Office delivery',
+  },
+  validPlan: {
+    name: 'TESTING',
+    description: 'A good description goes here',
+    price: 100000,
+    currency: 'RWF',
+    options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
 };
 
 export default adminSample;
