@@ -115,6 +115,7 @@ export default class Admin {
       cost: parseInt(cost, 10),
       currency,
       image,
+      available: true,
       categoryId: req.categoryData.id,
     };
     const savedObj = await saveObj(product, data);

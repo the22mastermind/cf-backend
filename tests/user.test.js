@@ -129,6 +129,8 @@ describe('USER FETCH SINGLE PRODUCT', () => {
         expect(data).to.haveOwnProperty('name');
         expect(data).to.haveOwnProperty('description');
         expect(data).to.haveOwnProperty('cost');
+        expect(data).to.haveOwnProperty('available');
+        expect(data.available).to.be.a('boolean');
         expect(data.category).to.haveOwnProperty('id');
         expect(data.category).to.haveOwnProperty('name');
         expect(data.category).to.haveOwnProperty('description');
