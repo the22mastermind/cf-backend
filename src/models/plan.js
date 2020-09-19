@@ -4,6 +4,7 @@ export default (sequelize, DataTypes) => {
     description: { type: DataTypes.STRING, allowNull: false },
     price: { type: DataTypes.INTEGER, allowNull: false },
     currency: { type: DataTypes.STRING, allowNull: false },
+    options: { type: DataTypes.ARRAY(DataTypes.STRING), allowNull: true },
   }, {});
   plan.associate = (models) => {
     plan.hasMany(models.subscription, {

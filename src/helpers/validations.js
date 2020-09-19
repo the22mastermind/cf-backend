@@ -103,6 +103,7 @@ const createMessages = (type, message) => ({
   [`${type}.format`]: message,
   [`${type}.min`]: message,
   [`${type}.max`]: message,
+  [`${type}.pattern.base`]: message,
   'any.required': message,
   'any.only': message,
   'any.ref': message,
@@ -148,6 +149,21 @@ const validatePlaceOrder = (data) => {
   });
 };
 
+const validateAddPlan = (data) => {
+  const schema = Joi.object({
+    name: Joi.string().regex(/^([A-Z]{3,30})+$/).required().messages(createMessages('string', `${messages.invalidPlanName}`)),
+    description: Joi.string().regex(/^([a-zA-Z,.\n ]{20,300})$/).required().messages(createMessages('string', `${messages.invalidPlanDesc}`)),
+    price: Joi.number().min(10000).max(1000000).required()
+      .messages(createMessages('number', `${messages.invalidPlanPrice}`)),
+    currency: Joi.string().regex(/^(RWF|CFA|USD)$/).required().messages(createMessages('string', `${messages.orderInvalidCurrency}`)),
+    options: Joi.array().items(Joi.string().trim()).required().messages(createMessages('array', `${messages.invalidPlanOptions}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -157,4 +173,5 @@ export default {
   subscriptionValidator,
   validateSubscribe,
   validatePlaceOrder,
+  validateAddPlan,
 };
