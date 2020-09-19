@@ -52,6 +52,7 @@ const adminSample = {
     address: 'Kicukiro',
     name: 'Chow Food',
     tin: '123456789',
+    tags: ['Halal', 'African', 'International'],
   },
   duplicateTin: {
     firstName: 'Chow',

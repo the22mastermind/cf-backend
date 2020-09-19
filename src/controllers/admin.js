@@ -53,6 +53,7 @@ export default class Admin {
       name,
       tin,
       website,
+      tags,
     } = req.body;
     const userInfo = {
       firstName,
@@ -71,6 +72,7 @@ export default class Admin {
       tin,
       website,
       status: userStatus.ACTIVE,
+      tags,
     };
     const vendorData = await saveObj(vendor, vendorInfo);
     return successResponse(res, statusCodes.created, adminVendorAddSuccess, null, vendorData);

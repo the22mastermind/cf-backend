@@ -52,7 +52,7 @@ const adminValidator = (data, type) => {
   });
   return schema.validate(data, {
     abortEarly: false,
-    allowUnknown: false,
+    allowUnknown: true,
   });
 };
 
