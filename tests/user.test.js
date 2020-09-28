@@ -976,3 +976,67 @@ describe('USER SUBSCRIBE', () => {
       });
   });
 });
+
+describe('USER FETCH ALL VENDORS', () => {
+  it('User login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'deniro@gmail.com',
+        password: 'deniro@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Vendors found should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/vendors')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.vendorsFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('name');
+        expect(data[0]).to.haveOwnProperty('tin');
+        expect(data[0]).to.haveOwnProperty('website');
+        expect(data[0]).to.haveOwnProperty('status');
+        expect(data[0]).to.haveOwnProperty('tags');
+        expect(data[0]).to.haveOwnProperty('userId');
+        expect(data[0]).to.haveOwnProperty('user');
+        expect(data[0].user).to.haveOwnProperty('id');
+        expect(data[0].userId).to.equal(data[0].user.id);
+        done();
+      });
+  });
+  it('Delete all vendors', async () => {
+    await db.sequelize.query('DELETE FROM vendors;');
+  });
+  it('Vendors not found should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/vendors')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.vendorsNotFound);
+        done();
+      });
+  });
+});

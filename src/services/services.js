@@ -130,6 +130,15 @@ const getSubsByCondition = async (model, plan, condition, user) => {
   return data;
 };
 
+const getAllVendors = async (model, user) => {
+  const data = await model.findAll({
+    include: [
+      { model: user, attributes: ['id', 'email', 'phone', 'address'] },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -146,4 +155,5 @@ export default {
   getAllOrders,
   getSubscriptions,
   getSubsByCondition,
+  getAllVendors,
 };

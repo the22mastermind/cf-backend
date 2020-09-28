@@ -103,6 +103,8 @@ const messages = {
   invalidPlanPrice: 'Subscription plan price must be a number between 10K and 1M',
   invalidPlanOptions: 'Subscription plan options must be an array of strings',
   passwordReset: 'Password reset successfully',
+  vendorsFound: 'Vendors retrieved successfully',
+  vendorsNotFound: 'No vendors found at the moment',
 };
 
 export default messages;

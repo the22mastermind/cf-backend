@@ -23,6 +23,8 @@ const {
   subscriptionNotFound,
   subscriptionFound,
   userSubscribe,
+  vendorsFound,
+  vendorsNotFound,
 } = messages;
 const {
   saveObj,
@@ -31,6 +33,7 @@ const {
   getMyOrders,
   getAll,
   getSubsByCondition,
+  getAllVendors,
 } = service;
 const {
   review,
@@ -41,6 +44,7 @@ const {
   orderContent,
   plan,
   subscription,
+  vendor,
 } = models;
 const { computeAverage, orderItemsParser } = miscellaneousHandlers;
 
@@ -138,5 +142,13 @@ export default class User {
     };
     const savedData = await saveObj(subscription, data);
     return successResponse(res, statusCodes.created, userSubscribe, null, savedData);
+  };
+
+  static fetchAllVendors = async (req, res) => {
+    const vendors = await getAllVendors(vendor, user);
+    if (_.isEmpty(vendors)) {
+      return errorResponse(res, statusCodes.notFound, vendorsNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, vendorsFound, null, vendors);
   };
 };
