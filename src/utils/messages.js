@@ -102,6 +102,7 @@ const messages = {
   invalidPlanDesc: 'Subscription plan description is required',
   invalidPlanPrice: 'Subscription plan price must be a number between 10K and 1M',
   invalidPlanOptions: 'Subscription plan options must be an array of strings',
+  passwordReset: 'Password reset successfully',
 };
 
 export default messages;

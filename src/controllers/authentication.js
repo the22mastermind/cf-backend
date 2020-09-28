@@ -13,6 +13,7 @@ const {
   validProfileUpdate,
   profileUpdateCompleted,
   validLoginCreds,
+  passwordReset,
 } = messages;
 const { createToken, generateOTP, sendOTP } = miscellaneousHelpers;
 const { saveObj, updateModel } = service;
@@ -66,5 +67,23 @@ export default class Authentication {
     const userProfile = _.omit(req.userData, 'password');
     const token = await createToken(userProfile);
     return successResponse(res, statusCodes.success, validLoginCreds, token, userProfile);
+  };
+
+  static passwordResetRequest = async (req, res) => {
+    const { phone } = req.userData;
+    const data = _.omit(req.userData, 'password');
+    const token = await createToken(data);
+    const otp = await generateOTP();
+    const otpMessage = `${otp} ${messages.otpMessage}`;
+    await sendOTP(phone, otpMessage);
+    const userInfo = { otp, phone };
+    return successResponse(res, statusCodes.success, null, token, userInfo);
+  };
+
+  static passwordResetConfirm = async (req, res) => {
+    const condition = { id: req.userData.id };
+    const { dataValues } = await updateModel(user, req.updateData, condition);
+    const data = _.omit(dataValues, 'password');
+    return successResponse(res, statusCodes.success, passwordReset, null, data);
   };
 };
