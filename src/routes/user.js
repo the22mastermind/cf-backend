@@ -13,6 +13,7 @@ const {
   getPlans,
   fetchSubscription,
   userSubscribe,
+  fetchAllVendors,
 } = user;
 const {
   checkTokenAndUser,
@@ -40,5 +41,6 @@ userRoutes.get('/orders', checkTokenAndUser, getOrders);
 userRoutes.get('/plans', checkTokenAndUser, getPlans);
 userRoutes.get('/subscription', checkTokenAndUser, fetchSubscription);
 userRoutes.post('/plans/:id/subscription', paramsValidation, subscribeValidator, checkTokenAndUser, checkPlan, checkSubscription, userSubscribe);
+userRoutes.get('/vendors', checkTokenAndUser, fetchAllVendors);
 
 export default userRoutes;
