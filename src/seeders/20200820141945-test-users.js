@@ -85,6 +85,19 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        firstName: 'Shawn',
+        lastName: 'Cartel',
+        email: 'cartel@gmail.com',
+        phone: '+250783331005',
+        password: await hashPassword('jayz@rocnation'),
+        role: CONSUMER,
+        profileComplete: true,
+        isVerified: true,
+        address: 'Kacyiru, KG 7 Ave, 2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ], {});
   },
 

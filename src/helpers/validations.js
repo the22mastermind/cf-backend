@@ -164,6 +164,26 @@ const validateAddPlan = (data) => {
   });
 };
 
+const validatePhone = (data) => {
+  const schema = Joi.object({
+    phone: Joi.string().regex(/^[+]+([0-9]{12})$/).required().messages(createMessages('string', `${messages.invalidSignupPhone}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
+const validatePassword = (data) => {
+  const schema = Joi.object({
+    password: Joi.string().regex(/^(?=.*[!@#$%^&*?])[0-9a-zA-Z!@#$%^&*?]{6,15}$/).required().messages(createMessages('string', `${messages.invalidPassword}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -174,4 +194,6 @@ export default {
   validateSubscribe,
   validatePlaceOrder,
   validateAddPlan,
+  validatePhone,
+  validatePassword,
 };

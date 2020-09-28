@@ -432,3 +432,103 @@ describe('USER LOGIN', () => {
       });
   });
 });
+
+describe('USER RESET PASSWORD', () => {
+  it('Unregistered user should return 404', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/resetpassword`)
+      .send({
+        phone: '+250883331005',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotFound);
+        done();
+      });
+  });
+  it('Registered user should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/resetpassword`)
+      .send({
+        phone: '+250783331005',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('otp');
+        expect(data).to.haveOwnProperty('phone');
+        done();
+      });
+  });
+  it('Reset user password should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`${baseUrl}/resetpassword/confirm`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        password: 'hov@123',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.passwordReset);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        done();
+      });
+  });
+  it('User login with new password should return 200', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send({
+        identifier: '+250783331005',
+        password: 'hov@123',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, token, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(token);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('phone');
+        expect(data.phone).to.equal('+250783331005');
+        done();
+      });
+  });
+  it('Login with old password should return 401', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/login`)
+      .send({
+        identifier: '+250783331005',
+        password: 'jayz@rocnation',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.invalidCredentials);
+        done();
+      });
+  });
+});

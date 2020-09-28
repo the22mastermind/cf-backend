@@ -8,7 +8,7 @@ import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 
 const { user } = models;
-const { payloadValidator } = validations;
+const { payloadValidator, validatePhone, validatePassword, } = validations;
 const { returnErrorMessages, hashPassword, isPasswordValid } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
 const {
@@ -98,10 +98,33 @@ const loginChecker = async (req, res, next) => {
   return next();
 };
 
+const phoneValidator = async (req, res, next) => {
+  const { error } = validatePhone(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const passwordValidator = async (req, res, next) => {
+  const { error } = validatePassword(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const findUser = async (req, res, next) => {
+  const { phone } = req.body;
+  const userProfile = await findByCondition(user, { phone });
+  if (!userProfile) {
+    return errorResponse(res, statusCodes.notFound, messages.loginUserNotFound);
+  }
+  req.userData = userProfile.dataValues;
+  return next();
+};
+
 export default {
   handleValidation,
   userExists,
   profileUpdate,
   checkTokenAndUser,
   loginChecker,
+  phoneValidator,
+  passwordValidator,
+  findUser,
 };
