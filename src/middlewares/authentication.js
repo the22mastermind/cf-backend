@@ -8,7 +8,7 @@ import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 
 const { user } = models;
-const { payloadValidator, validatePhone, validatePassword, } = validations;
+const { payloadValidator, validatePhone, validatePassword } = validations;
 const { returnErrorMessages, hashPassword, isPasswordValid } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
 const {
