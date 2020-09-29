@@ -42,7 +42,7 @@ const adminValidator = (data, type) => {
   }) : type === 'product' ? Joi.object({
     name: handleValidations(/^([a-zA-Z ]{3,60})$/, { 'string.pattern.base': messages.productNameInvalid }, false),
     description: handleValidations(/^([a-zA-Z,.;:\n ]{0,300})$/, { 'string.pattern.base': messages.productDescInvalid }, true),
-    quantity: handleValidations(/^[0-9]{1,5}[ ]+(ml|kg)$/i, { 'string.pattern.base': messages.productQuantityInvalid }, true),
+    quantity: handleValidations(/^[0-9]{1,5}[ ]+(ml|kg|items)$/, { 'string.pattern.base': messages.productQuantityInvalid }, true),
     cost: handleValidations(/^([0-9]{3,6})$/, { 'string.pattern.base': messages.productCostInvalid }, false),
     currency: handleValidations(/^(RWF|CFA|USD)$/, { 'string.pattern.base': messages.productCurrencyInvalid }, false),
     image: handleValidations(/^[a-z0-9._%+-:/]{10,}$/, { 'string.pattern.base': messages.productImageInvalid }, true),
