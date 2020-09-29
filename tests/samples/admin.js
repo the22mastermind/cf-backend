@@ -127,6 +127,14 @@ const adminSample = {
     currency: 'CFA',
     image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
   },
+  validProductMarketItems: {
+    name: 'Paper Towels',
+    description: 'Some good description goes here.',
+    quantity: '4 items',
+    cost: '8500',
+    currency: 'RWF',
+    image: 'https://res.cloudinary.com/dhnalykju/image/upload/v1598352295/chowfood/products/cappuccino_eg3ixk.jpg',
+  },
   invalidPlanName: {
     name: 'aaaaaa',
     description: 'A good description goes here',

@@ -528,6 +528,29 @@ describe('ADMIN ADD PRODUCT', () => {
         done();
       });
   });
+  it('Valid market product (items) should return 201', (done) => {
+    chai
+      .request(server)
+      .post(`${baseUrl}/category/3/product`)
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validProductMarketItems)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.productAddSuccess);
+        expect(data);
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('name');
+        expect(data).to.haveOwnProperty('description');
+        expect(data).to.haveOwnProperty('available');
+        expect(data).to.haveOwnProperty('categoryId');
+        expect(data).to.haveOwnProperty('quantity');
+        expect(data.quantity).to.equal('4 items');
+        done();
+      });
+  });
 });
 
 describe('ADMIN FETCH ALL ORDERS', () => {
