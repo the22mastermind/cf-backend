@@ -6,6 +6,7 @@ import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 import models from '../models';
 import miscellaneousHandlers from '../helpers/miscellaneous';
+import notifyHandler from '../helpers/notify';
 import orderStatus from '../utils/orderStatus';
 import subscriptionStatus from '../utils/subscriptionStatus';
 
@@ -47,6 +48,7 @@ const {
   vendor,
 } = models;
 const { computeAverage, orderItemsParser } = miscellaneousHandlers;
+const { sendNotificationToClient } = notifyHandler;
 
 export default class User {
   static getSingleProduct = async (req, res) => {
@@ -98,6 +100,13 @@ export default class User {
     const { contents } = req.body;
     const contentsData = await orderItemsParser(contents, orderId);
     await saveRows(orderContent, contentsData);
+    const tokens = [];
+    tokens.push(process.env.FCM_TOKEN);
+    const notificationData = {
+      title: 'New Order Alert!',
+      body: `Order total: ${orderData.total} from: ${req.userData.firstName} ${req.userData.lastName}`,
+    };
+    await sendNotificationToClient(tokens, notificationData);
     return successResponse(res, statusCodes.created, orderPlaced, null, null);
   };
 
