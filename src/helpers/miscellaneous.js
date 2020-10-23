@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import statusCodes from '../utils/statusCodes';
