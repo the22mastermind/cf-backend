@@ -102,6 +102,3 @@ dist
 
 # TernJS port file
 .tern-port
-
-#Firebase
-src/config/chowfood-4472c-firebase-adminsdk-3z86z-bfb38862f8.json
