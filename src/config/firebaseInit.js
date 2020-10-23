@@ -10,7 +10,7 @@ admin.initializeApp({
   credential: admin.credential.cert({
     "type": "service_account",
     "private_key_id": process.env.FIREBASE_PRIVATE_KEY_ID,
-    "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
+    "private_key": process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, '\n'),
     "client_email": process.env.CLIENT_EMAIL,
     "project_id": process.env.PROJECT_ID,
     "client_id": process.env.CLIENT_ID,
