@@ -7,8 +7,10 @@ import userRoles from '../utils/userRoles';
 import userStatus from '../utils/userStatus';
 import service from '../services/services';
 import models from '../models';
+import miscellaneousHelper from '../helpers/miscellaneous';
 
 const { successResponse, errorResponse } = responseHandler;
+const { computeTodaysProfit } = miscellaneousHelper;
 const {
   adminVendorAddSuccess,
   adminVendorFetchSuccess,
@@ -191,5 +193,17 @@ export default class Admin {
   static fetchAllUsers = async (req, res) => {
     const data = await getAllUsers(user);
     return successResponse(res, statusCodes.success, usersFound, null, data);
+  };
+
+  static fetchDashboardSummary = async (req, res) => {
+    const users = await getAllUsers(user);
+    const ordersData = await getAllOrders(order, orderContent, user);
+    const profit = await computeTodaysProfit(ordersData);
+    const data = {
+      orders: ordersData.length,
+      users: users.length,
+      profit,
+    };
+    return successResponse(res, statusCodes.success, null, null, data);
   };
 };
