@@ -15,6 +15,7 @@ const {
   fetchAllSubscriptions,
   getSubscriptionsByPlan,
   addPlan,
+  fetchAllUsers,
 } = admin;
 const {
   userExists,
@@ -49,5 +50,6 @@ adminRoutes.patch('/subscriptions/users/:id', paramsValidation, validateSubscrip
 adminRoutes.get('/subscriptions', checkTokenAndUser, isAdmin, fetchAllSubscriptions);
 adminRoutes.get('/plans/:id/subscriptions', paramsValidation, checkTokenAndUser, isAdmin, getSubscriptionsByPlan);
 adminRoutes.post('/plans', addPlanValidator, checkTokenAndUser, isAdmin, planExists, addPlan);
+adminRoutes.get('/users', checkTokenAndUser, isAdmin, fetchAllUsers);
 
 export default adminRoutes;

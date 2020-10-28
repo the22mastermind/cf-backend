@@ -1109,3 +1109,53 @@ describe('ADMIN CREATE SUBSCRIPTION PLANS', () => {
     await db.sequelize.query('DELETE FROM plans');
   });
 });
+
+describe('ADMIN FETCH USERS', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Fetch all users should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/admin/users')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.usersFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('firstName');
+        expect(data[0]).to.haveOwnProperty('lastName');
+        expect(data[0]).to.haveOwnProperty('email');
+        expect(data[0]).to.haveOwnProperty('phone');
+        expect(data[0]).to.haveOwnProperty('address');
+        expect(data[0]).to.haveOwnProperty('role');
+        expect(data[0]).to.haveOwnProperty('isVerified');
+        expect(data[0]).to.haveOwnProperty('profileComplete');
+        expect(data[0]).to.haveOwnProperty('vendor');
+        expect(data[0]).to.haveOwnProperty('review');
+        expect(data[0]).to.haveOwnProperty('orders');
+        expect(data[0]).to.haveOwnProperty('subscription');
+        done();
+      });
+  });
+});
