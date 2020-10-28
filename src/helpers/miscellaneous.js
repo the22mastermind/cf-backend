@@ -1,5 +1,7 @@
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import moment from 'moment';
+import _ from 'lodash';
 import statusCodes from '../utils/statusCodes';
 import responseHandler from './responseHandler';
 import twilioClient from '../config/twilioConfig';
@@ -64,6 +66,15 @@ const orderItemsParser = async (items, orderId) => {
   return contents;
 };
 
+const computeTodaysProfit = (data) => {
+  const startToday = parseInt(moment().startOf('day').format('x'), 10);
+  const endToday = parseInt(moment().endOf('day').format('x'), 10);
+  const todaysOrders = data.filter((order) => (_.inRange(parseInt(moment(order.createdAt, moment.ISO_8601).format('x'), 10), startToday, endToday) && order.status === 'completed'));
+  const initialValue = 0;
+  const sum = todaysOrders.reduce((a, b) => a + b.total, initialValue);
+  return sum;
+};
+
 export default {
   createToken,
   returnErrorMessages,
@@ -73,4 +84,5 @@ export default {
   isPasswordValid,
   computeAverage,
   orderItemsParser,
+  computeTodaysProfit,
 };

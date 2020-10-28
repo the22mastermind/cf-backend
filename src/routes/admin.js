@@ -16,6 +16,7 @@ const {
   getSubscriptionsByPlan,
   addPlan,
   fetchAllUsers,
+  fetchDashboardSummary,
 } = admin;
 const {
   userExists,
@@ -51,5 +52,6 @@ adminRoutes.get('/subscriptions', checkTokenAndUser, isAdmin, fetchAllSubscripti
 adminRoutes.get('/plans/:id/subscriptions', paramsValidation, checkTokenAndUser, isAdmin, getSubscriptionsByPlan);
 adminRoutes.post('/plans', addPlanValidator, checkTokenAndUser, isAdmin, planExists, addPlan);
 adminRoutes.get('/users', checkTokenAndUser, isAdmin, fetchAllUsers);
+adminRoutes.get('/summary', checkTokenAndUser, isAdmin, fetchDashboardSummary);
 
 export default adminRoutes;

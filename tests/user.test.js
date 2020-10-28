@@ -1040,3 +1040,41 @@ describe('USER FETCH ALL VENDORS', () => {
       });
   });
 });
+
+describe('ADMIN FETCH SUMMARY', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        adminToken = token;
+        expect(adminToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Fetch summary should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/admin/summary')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('orders');
+        expect(data).to.haveOwnProperty('users');
+        expect(data).to.haveOwnProperty('profit');
+        done();
+      });
+  });
+});
