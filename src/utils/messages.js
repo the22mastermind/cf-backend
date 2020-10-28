@@ -105,6 +105,8 @@ const messages = {
   passwordReset: 'Password reset successfully',
   vendorsFound: 'Vendors retrieved successfully',
   vendorsNotFound: 'No vendors found at the moment',
+  usersFound: 'Users retrieved successfully',
+  usersNotFound: 'No users found at the moment',
 };
 
 export default messages;

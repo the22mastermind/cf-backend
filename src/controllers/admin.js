@@ -22,6 +22,7 @@ const {
   subscriptionsNotFound,
   subscriptionsFound,
   planCreated,
+  usersFound,
 } = messages;
 const {
   deleteItem,
@@ -30,6 +31,7 @@ const {
   getAllOrders,
   getSubscriptions,
   getSubsByCondition,
+  getAllUsers,
 } = service;
 const {
   category,
@@ -184,5 +186,10 @@ export default class Admin {
     };
     const data = await saveObj(plan, planInfo);
     return successResponse(res, statusCodes.created, planCreated, null, data);
+  };
+
+  static fetchAllUsers = async (req, res) => {
+    const data = await getAllUsers(user);
+    return successResponse(res, statusCodes.success, usersFound, null, data);
   };
 };

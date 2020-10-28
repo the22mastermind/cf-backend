@@ -1,3 +1,5 @@
+import { Op } from 'sequelize';
+
 const findByCondition = async (model, condition) => {
   const data = await model.findOne({ where: condition });
   return data;
@@ -139,6 +141,24 @@ const getAllVendors = async (model, user) => {
   return data;
 };
 
+const getAllUsers = async (model) => {
+  const data = await model.findAll({
+    attributes: { exclude: ['password'] },
+    where: {
+      role: {
+        [Op.ne]: 'admin',
+      },
+    },
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { all: true },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -156,4 +176,5 @@ export default {
   getSubscriptions,
   getSubsByCondition,
   getAllVendors,
+  getAllUsers,
 };
