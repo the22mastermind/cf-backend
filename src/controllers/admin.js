@@ -10,7 +10,7 @@ import models from '../models';
 import miscellaneousHelper from '../helpers/miscellaneous';
 
 const { successResponse, errorResponse } = responseHandler;
-const { computeTodaysProfit } = miscellaneousHelper;
+const { computeTodaysProfit, hashPassword } = miscellaneousHelper;
 const {
   adminVendorAddSuccess,
   adminVendorFetchSuccess,
@@ -25,6 +25,8 @@ const {
   subscriptionsFound,
   planCreated,
   usersFound,
+  adminAddUserSuccess,
+  adminUpdateUserStatus,
 } = messages;
 const {
   deleteItem,
@@ -205,5 +207,44 @@ export default class Admin {
       profit,
     };
     return successResponse(res, statusCodes.success, null, null, data);
+  };
+
+  static addUser = async (req, res) => {
+    const {
+      firstName,
+      lastName,
+      email,
+      phone,
+      role,
+    } = req.body;
+    const password = `${process.env.RIDER_PASSWORD_PREFIX}${phone.slice(-4)}`;
+    const hashedPassword = await hashPassword(password);
+    const userInfo = {
+      firstName,
+      lastName,
+      email,
+      phone,
+      password: hashedPassword,
+      role,
+      profileComplete: true,
+      isVerified: true,
+    };
+    const userData = await saveObj(user, userInfo);
+    const data = _.omit(userData, 'password');
+    return successResponse(res, statusCodes.created, adminAddUserSuccess, null, data);
+  };
+
+  static updateUserStatus = async (req, res) => {
+    const { status } = req.body;
+    const condition = { id: req.params.id };
+    let isVerified;
+    if (status === 'active') {
+      isVerified = true;
+    } else {
+      isVerified = false;
+    }
+    const data = { isVerified };
+    const updatedData = await updateModel(user, data, condition);
+    return successResponse(res, statusCodes.success, adminUpdateUserStatus, null, updatedData);
   };
 };

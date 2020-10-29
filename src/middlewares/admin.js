@@ -21,6 +21,8 @@ const {
   orderStatusValidator,
   subscriptionValidator,
   validateAddPlan,
+  validateAddUser,
+  validateUpdateUserStatus,
 } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
@@ -148,6 +150,25 @@ const planExists = async (req, res, next) => {
   return next();
 };
 
+const addUserValidator = async (req, res, next) => {
+  const { error } = validateAddUser(req.body);
+  returnErrorMessages(error, res, next);
+};
+
+const addUserExists = async (req, res, next) => {
+  const { phone } = req.body;
+  const data = await findByCondition(user, { phone });
+  if (!data) {
+    return next();
+  }
+  return errorResponse(res, statusCodes.conflict, messages.adminAddUserConflict);
+};
+
+const updateUserStatusValidator = async (req, res, next) => {
+  const { error } = validateUpdateUserStatus(req.body);
+  returnErrorMessages(error, res, next);
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -163,4 +184,7 @@ export default {
   findSubscription,
   addPlanValidator,
   planExists,
+  addUserValidator,
+  addUserExists,
+  updateUserStatusValidator,
 };
