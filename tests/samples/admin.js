@@ -1,3 +1,5 @@
+import userRoles from '../../src/utils/userRoles';
+
 const adminSample = {
   emptyVendorFirstName: {
     firstName: '',
@@ -174,6 +176,13 @@ const adminSample = {
     price: 100000,
     currency: 'RWF',
     options: ['Office delivery', 'Loyalty points', 'Monday-Friday'],
+  },
+  validRider: {
+    firstName: 'Lorne',
+    lastName: 'Malvo',
+    email: 'lornemalvo@gmail.com',
+    phone: '+250781111111',
+    role: userRoles.RIDER,
   },
 };
 

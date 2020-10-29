@@ -184,6 +184,20 @@ const validatePassword = (data) => {
   });
 };
 
+const validateAddUser = (data) => {
+  const schema = Joi.object({
+    firstName: Joi.string().regex(/^([a-zA-Z]{3,30})+$/).required().messages(createMessages('string', `${messages.invalidSignupFirstName}`)),
+    lastName: Joi.string().regex(/^([a-zA-Z]{3,30})+$/).required().messages(createMessages('string', `${messages.invalidSignupLastName}`)),
+    email: Joi.string().regex(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i).required().messages(createMessages('string', `${messages.invalidSignupEmail}`)),
+    phone: Joi.string().regex(/^[+]+([0-9]{12})$/).required().messages(createMessages('string', `${messages.invalidSignupPhone}`)),
+    role: Joi.string().regex(/^(rider)$/).required().messages(createMessages('string', `${messages.adminAddUserInvalidRole}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -196,4 +210,5 @@ export default {
   validateAddPlan,
   validatePhone,
   validatePassword,
+  validateAddUser,
 };

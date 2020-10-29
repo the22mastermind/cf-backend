@@ -1159,3 +1159,77 @@ describe('ADMIN FETCH USERS', () => {
       });
   });
 });
+
+describe('ADMIN ADD USER', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Add an invalid rider should return 400', (done) => {
+    chai
+      .request(server)
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        done();
+      });
+  });
+  it('Add valid rider should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validRider)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.adminAddUserSuccess);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('firstName');
+        expect(data).to.haveOwnProperty('lastName');
+        expect(data).to.haveOwnProperty('email');
+        expect(data).to.haveOwnProperty('phone');
+        expect(data).to.haveOwnProperty('role');
+        expect(data).to.haveOwnProperty('isVerified');
+        expect(data).to.haveOwnProperty('profileComplete');
+        done();
+      });
+  });
+  it('Add existing rider should return 409', (done) => {
+    chai
+      .request(server)
+      .post('/admin/users')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(sample.validRider)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.adminAddUserConflict);
+        done();
+      });
+  });
+});

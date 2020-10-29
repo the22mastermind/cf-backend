@@ -107,6 +107,9 @@ const messages = {
   vendorsNotFound: 'No vendors found at the moment',
   usersFound: 'Users retrieved successfully',
   usersNotFound: 'No users found at the moment',
+  adminAddUserSuccess: 'User added successfully',
+  adminAddUserConflict: 'Add user failed. User already exists',
+  adminAddUserInvalidRole: 'Role must be rider',
 };
 
 export default messages;
