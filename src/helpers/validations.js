@@ -198,6 +198,16 @@ const validateAddUser = (data) => {
   });
 };
 
+const validateUpdateUserStatus = (data) => {
+  const schema = Joi.object({
+    status: Joi.string().regex(/^(active|deactive)$/).required().messages(createMessages('string', `${messages.adminUpdateUserInvalidStatus}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -211,4 +221,5 @@ export default {
   validatePhone,
   validatePassword,
   validateAddUser,
+  validateUpdateUserStatus,
 };

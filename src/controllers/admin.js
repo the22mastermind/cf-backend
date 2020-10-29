@@ -26,6 +26,7 @@ const {
   planCreated,
   usersFound,
   adminAddUserSuccess,
+  adminUpdateUserStatus,
 } = messages;
 const {
   deleteItem,
@@ -231,5 +232,19 @@ export default class Admin {
     const userData = await saveObj(user, userInfo);
     const data = _.omit(userData, 'password');
     return successResponse(res, statusCodes.created, adminAddUserSuccess, null, data);
+  };
+
+  static updateUserStatus = async (req, res) => {
+    const { status } = req.body;
+    const condition = { id: req.params.id };
+    let isVerified;
+    if (status === 'active') {
+      isVerified = true;
+    } else {
+      isVerified = false;
+    }
+    const data = { isVerified };
+    const updatedData = await updateModel(user, data, condition);
+    return successResponse(res, statusCodes.success, adminUpdateUserStatus, null, updatedData);
   };
 };

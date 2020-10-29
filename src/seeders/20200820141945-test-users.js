@@ -98,6 +98,19 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
+      {
+        firstName: 'Black',
+        lastName: 'Panther',
+        email: 'blackpanther@gmail.com',
+        phone: '+250783331006',
+        password: await hashPassword('black@panther'),
+        role: CONSUMER,
+        profileComplete: true,
+        isVerified: true,
+        address: 'Kacyiru, KG 7 Ave, 2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
     ], {});
   },
 

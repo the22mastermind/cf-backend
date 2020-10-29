@@ -18,6 +18,7 @@ const {
   fetchAllUsers,
   fetchDashboardSummary,
   addUser,
+  updateUserStatus,
 } = admin;
 const {
   userExists,
@@ -40,6 +41,7 @@ const {
   planExists,
   addUserValidator,
   addUserExists,
+  updateUserStatusValidator,
 } = adminMiddleware;
 const adminRoutes = express.Router();
 
@@ -57,5 +59,6 @@ adminRoutes.post('/plans', addPlanValidator, checkTokenAndUser, isAdmin, planExi
 adminRoutes.get('/users', checkTokenAndUser, isAdmin, fetchAllUsers);
 adminRoutes.get('/summary', checkTokenAndUser, isAdmin, fetchDashboardSummary);
 adminRoutes.post('/users', addUserValidator, addUserExists, checkTokenAndUser, isAdmin, addUser);
+adminRoutes.patch('/users/:id', paramsValidation, updateUserStatusValidator, findUserById, checkTokenAndUser, isAdmin, updateUserStatus);
 
 export default adminRoutes;

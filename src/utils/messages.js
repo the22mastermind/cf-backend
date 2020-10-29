@@ -110,6 +110,8 @@ const messages = {
   adminAddUserSuccess: 'User added successfully',
   adminAddUserConflict: 'Add user failed. User already exists',
   adminAddUserInvalidRole: 'Role must be rider',
+  adminUpdateUserStatus: 'User status updated successfully',
+  adminUpdateUserInvalidStatus: 'User status must be active or deactive',
 };
 
 export default messages;

@@ -22,6 +22,7 @@ const {
   subscriptionValidator,
   validateAddPlan,
   validateAddUser,
+  validateUpdateUserStatus,
 } = validations;
 const { errorResponse } = responseHandler;
 const { returnErrorMessages } = miscellaneousHelpers;
@@ -163,6 +164,11 @@ const addUserExists = async (req, res, next) => {
   return errorResponse(res, statusCodes.conflict, messages.adminAddUserConflict);
 };
 
+const updateUserStatusValidator = async (req, res, next) => {
+  const { error } = validateUpdateUserStatus(req.body);
+  returnErrorMessages(error, res, next);
+};
+
 export default {
   vendorExists,
   adminValidation,
@@ -180,4 +186,5 @@ export default {
   planExists,
   addUserValidator,
   addUserExists,
+  updateUserStatusValidator,
 };

@@ -13,6 +13,7 @@ const {
   success,
   forbidden,
   notFound,
+  unauthorized,
 } = statusCodes;
 const baseUrl = '/admin';
 
@@ -1229,6 +1230,119 @@ describe('ADMIN ADD USER', () => {
         expect(res.status).to.equal(conflict);
         expect(error);
         expect(error).to.equal(messages.adminAddUserConflict);
+        done();
+      });
+  });
+});
+
+describe('ADMIN DISABLE/ENABLE USER', () => {
+  it('Login admin should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'admin@gmail.com',
+        password: 'hellowordl@0',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Deactivating a user should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/users/8')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        status: 'deactive',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.adminUpdateUserStatus);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('firstName');
+        expect(data).to.haveOwnProperty('lastName');
+        expect(data).to.haveOwnProperty('email');
+        expect(data).to.haveOwnProperty('phone');
+        expect(data).to.haveOwnProperty('role');
+        expect(data).to.haveOwnProperty('isVerified');
+        expect(data.isVerified).to.equal(false);
+        done();
+      });
+  });
+  it('Login deactivated user should return 401', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'blackpanther@gmail.com',
+        password: 'black@panther',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(unauthorized);
+        expect(error);
+        expect(error).to.equal(messages.loginUserNotVerified);
+        done();
+      });
+  });
+  it('Activating a user should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/admin/users/8')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({
+        status: 'active',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.adminUpdateUserStatus);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('firstName');
+        expect(data).to.haveOwnProperty('lastName');
+        expect(data).to.haveOwnProperty('email');
+        expect(data).to.haveOwnProperty('phone');
+        expect(data).to.haveOwnProperty('role');
+        expect(data).to.haveOwnProperty('isVerified');
+        expect(data.isVerified).to.equal(true);
+        done();
+      });
+  });
+  it('Login active user should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'blackpanther@gmail.com',
+        password: 'black@panther',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.validLoginCreds);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('email');
+        expect(data.email).to.equal('blackpanther@gmail.com');
         done();
       });
   });
