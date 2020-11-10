@@ -46,6 +46,7 @@ const {
   orderContent,
   subscription,
   plan,
+  rider,
 } = models;
 
 export default class Admin {
@@ -230,6 +231,8 @@ export default class Admin {
       isVerified: true,
     };
     const userData = await saveObj(user, userInfo);
+    const riderInfo = { name: `${firstName} ${lastName}`, userId: userData.id };
+    await saveObj(rider, riderInfo);
     const data = _.omit(userData, 'password');
     return successResponse(res, statusCodes.created, adminAddUserSuccess, null, data);
   };

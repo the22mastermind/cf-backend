@@ -118,6 +118,14 @@ const findUser = async (req, res, next) => {
   return next();
 };
 
+const isRider = async (req, res, next) => {
+  const { role } = req.userData;
+  if (role !== 'rider') {
+    return errorResponse(res, statusCodes.unauthorized, messages.userNotRider);
+  }
+  return next();
+};
+
 export default {
   handleValidation,
   userExists,
@@ -127,4 +135,5 @@ export default {
   phoneValidator,
   passwordValidator,
   findUser,
+  isRider,
 };

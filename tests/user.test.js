@@ -22,6 +22,7 @@ chai.should();
 
 let userToken = null;
 let adminToken = null;
+let riderToken = null;
 
 describe('USER FETCH ALL CATEGORIES', () => {
   it('User login should return 200', (done) => {
@@ -1074,6 +1075,106 @@ describe('ADMIN FETCH SUMMARY', () => {
         expect(data).to.haveOwnProperty('orders');
         expect(data).to.haveOwnProperty('users');
         expect(data).to.haveOwnProperty('profit');
+        done();
+      });
+  });
+});
+
+describe('RIDER FETCH OPEN ORDERS', () => {
+  it('User login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'denzel@gmail.com',
+        password: 'denzel@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('User place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrderThree)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('User place order should return 201', (done) => {
+    chai
+      .request(server)
+      .post('/orders')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send(userSample.validOrderThree)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message } = res.body;
+        expect(res.status).to.equal(created);
+        expect(message);
+        expect(message).to.equal(messages.orderPlaced);
+        done();
+      });
+  });
+  it('Rider login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'lornemalvo@gmail.com',
+        password: `${process.env.RIDER_PASSWORD_PREFIX}1111`,
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        riderToken = token;
+        expect(riderToken).to.be.a('string');
+        done();
+      });
+  });
+  it('Rider fetch open orders should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/rider/orders/open')
+      .set('Authorization', `Bearer ${riderToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.ordersFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0].userId).to.equal(data[0].user.id);
+        expect(data[0].user).to.haveOwnProperty('id');
+        expect(data[0].user).to.haveOwnProperty('firstName');
+        expect(data[0].user).to.haveOwnProperty('lastName');
+        expect(data[0].user).to.haveOwnProperty('phone');
+        expect(data[0].user).to.haveOwnProperty('address');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('id');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productId');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productName');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('quantity');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('cost');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('orderId');
+        expect(data[0].id).to.equal(data[0].orderContents[0].orderId);
         done();
       });
   });
