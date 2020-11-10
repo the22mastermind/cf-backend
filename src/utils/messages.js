@@ -112,6 +112,7 @@ const messages = {
   adminAddUserInvalidRole: 'Role must be rider',
   adminUpdateUserStatus: 'User status updated successfully',
   adminUpdateUserInvalidStatus: 'User status must be active or deactive',
+  userNotRider: 'You must be a rider to use this resource',
 };
 
 export default messages;

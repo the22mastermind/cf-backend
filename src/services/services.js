@@ -159,6 +159,23 @@ const getAllUsers = async (model) => {
   return data;
 };
 
+const riderGetOrders = async (model, orderContent, user, condition) => {
+  const data = await model.findAll({
+    where: condition,
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: orderContent },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'phone', 'address'],
+      },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -177,4 +194,5 @@ export default {
   getSubsByCondition,
   getAllVendors,
   getAllUsers,
+  riderGetOrders,
 };

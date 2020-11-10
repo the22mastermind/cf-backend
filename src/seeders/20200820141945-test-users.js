@@ -2,7 +2,7 @@ import userRoles from '../utils/userRoles';
 import miscellaneousHelpers from '../helpers/miscellaneous';
 
 const { hashPassword } = miscellaneousHelpers;
-const { CONSUMER, ADMIN } = userRoles;
+const { CONSUMER, ADMIN, RIDER } = userRoles;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -108,6 +108,19 @@ module.exports = {
         profileComplete: true,
         isVerified: true,
         address: 'Kacyiru, KG 7 Ave, 2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        firstName: 'Dwayne',
+        lastName: 'Wade',
+        email: 'deadpool@gmail.com',
+        phone: '+250783331007',
+        password: await hashPassword('dead@pool'),
+        role: RIDER,
+        profileComplete: true,
+        isVerified: true,
+        address: 'Kicukiro, KG 7 Ave, 2',
         createdAt: new Date(),
         updatedAt: new Date(),
       },
