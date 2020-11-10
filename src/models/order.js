@@ -36,6 +36,11 @@ export default (sequelize, DataTypes) => {
       onDelete: 'CASCADE',
       onUpdate: 'CASCADE',
     });
+    order.belongsTo(models.rider, {
+      foreignKey: 'riderId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return order;
 };

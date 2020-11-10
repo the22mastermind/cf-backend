@@ -54,8 +54,8 @@ describe('RIDER FETCH EMPTY OPEN ORDERS', () => {
       .request(server)
       .post('/auth/login')
       .send({
-        identifier: 'deadpool@gmail.com',
-        password: 'dead@pool',
+        identifier: 'lornemalvo@gmail.com',
+        password: `${process.env.RIDER_PASSWORD_PREFIX}1111`,
       })
       .end((err, res) => {
         if (err) done(err);
