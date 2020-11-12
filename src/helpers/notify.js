@@ -7,6 +7,21 @@ const sendNotificationToClient = async (tokens, data) => {
   return responses;
 };
 
+const orderStatusUpdateNotification = async (token, payload) => {
+  const { results } = await messaging.sendToDevice(
+    token,
+    {
+      notification: {
+        title: payload.title,
+        body: payload.body,
+      },
+    },
+    { contentAvailable: true, priority: 'high' },
+  );
+  return results;
+};
+
 export default {
   sendNotificationToClient,
+  orderStatusUpdateNotification,
 };

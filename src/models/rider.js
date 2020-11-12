@@ -7,6 +7,11 @@ export default (sequelize, DataTypes) => {
       foreignKey: 'userId',
       onUpdate: 'CASCADE',
     });
+    rider.hasMany(models.order, {
+      foreignKey: 'riderId',
+      onDelete: 'CASCADE',
+      onUpdate: 'CASCADE',
+    });
   };
   return rider;
 };
