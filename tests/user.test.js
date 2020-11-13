@@ -1229,6 +1229,8 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         expect(message).to.equal(messages.ordersFound);
         expect(data);
         expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('riderId');
+        expect(data[0].riderId).to.be.a('number');
         expect(data[0].orderContents).to.be.a('array');
         expect(data[0].user).to.be.a('object');
         expect(data[0].userId).to.equal(data[0].user.id);
