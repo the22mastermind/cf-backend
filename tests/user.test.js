@@ -1180,6 +1180,20 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         done();
       });
   });
+  it('Rider fetch assigned orders should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/rider/orders')
+      .set('Authorization', `Bearer ${riderToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.riderOrdersNotFound);
+        done();
+      });
+  });
   it('Update userFcmToken in user model with test token', async () => {
     await db.sequelize.query(`UPDATE users SET "userFcmToken"='${process.env.TEST_CLIENT_FCM}'`);
   });
@@ -1199,6 +1213,36 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         expect(data).to.be.a('object');
         expect(data).to.haveOwnProperty('status');
         expect(data.status).to.equal('processing');
+        done();
+      });
+  });
+  it('Rider fetch assigned orders should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/rider/orders')
+      .set('Authorization', `Bearer ${riderToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.ordersFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0].userId).to.equal(data[0].user.id);
+        expect(data[0].user).to.haveOwnProperty('id');
+        expect(data[0].user).to.haveOwnProperty('firstName');
+        expect(data[0].user).to.haveOwnProperty('lastName');
+        expect(data[0].user).to.haveOwnProperty('phone');
+        expect(data[0].user).to.haveOwnProperty('address');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('id');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productId');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('productName');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('quantity');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('cost');
+        expect(data[0].orderContents[0]).to.haveOwnProperty('orderId');
         done();
       });
   });
