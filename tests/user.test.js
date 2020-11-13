@@ -23,6 +23,7 @@ chai.should();
 let userToken = null;
 let adminToken = null;
 let riderToken = null;
+let orderId = null;
 
 describe('USER FETCH ALL CATEGORIES', () => {
   it('User login should return 200', (done) => {
@@ -1175,6 +1176,29 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         expect(data[0].orderContents[0]).to.haveOwnProperty('cost');
         expect(data[0].orderContents[0]).to.haveOwnProperty('orderId');
         expect(data[0].id).to.equal(data[0].orderContents[0].orderId);
+        orderId = data[0].id;
+        done();
+      });
+  });
+  it('Update userFcmToken in user model with test token', async () => {
+    await db.sequelize.query(`UPDATE users SET "userFcmToken"='${process.env.TEST_CLIENT_FCM}'`);
+  });
+  it('Rider take order should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`/rider/orders/${orderId}`)
+      .set('Authorization', `Bearer ${riderToken}`)
+      .send({ status: 'processing' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.riderTakeOrder);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('processing');
         done();
       });
   });

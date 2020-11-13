@@ -113,6 +113,7 @@ const messages = {
   adminUpdateUserStatus: 'User status updated successfully',
   adminUpdateUserInvalidStatus: 'User status must be active or deactive',
   userNotRider: 'You must be a rider to use this resource',
+  riderTakeOrder: 'Order taken successfully',
 };
 
 export default messages;

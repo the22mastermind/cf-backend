@@ -68,6 +68,7 @@ export default (sequelize, DataTypes) => {
     address: {
       type: DataTypes.STRING,
     },
+    userFcmToken: { type: DataTypes.STRING, allowNull: true },
   });
   user.associate = (models) => {
     user.hasOne(models.vendor, {

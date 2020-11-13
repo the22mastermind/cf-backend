@@ -7,7 +7,7 @@ import messages from '../utils/messages';
 import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 
-const { user } = models;
+const { user, rider } = models;
 const { payloadValidator, validatePhone, validatePassword } = validations;
 const { returnErrorMessages, hashPassword, isPasswordValid } = miscellaneousHelpers;
 const { errorResponse } = responseHandler;
@@ -123,6 +123,8 @@ const isRider = async (req, res, next) => {
   if (role !== 'rider') {
     return errorResponse(res, statusCodes.unauthorized, messages.userNotRider);
   }
+  const riderProfile = await findByCondition(rider, { userId: req.userData.id });
+  req.riderData = riderProfile.dataValues;
   return next();
 };
 
