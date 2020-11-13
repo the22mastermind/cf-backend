@@ -7,7 +7,12 @@ import models from '../models';
 import notifyHandler from '../helpers/notify';
 
 const { successResponse, errorResponse } = responseHandler;
-const { ordersFound, ordersNotFound, riderTakeOrder } = messages;
+const {
+  ordersFound,
+  ordersNotFound,
+  riderTakeOrder,
+  riderOrdersNotFound,
+} = messages;
 const { riderGetOrders, findById, updateModel } = service;
 const {
   user,
@@ -43,5 +48,14 @@ export default class User {
     };
     await orderStatusUpdateNotification(userFcmToken, notificationData);
     return successResponse(res, statusCodes.success, riderTakeOrder, null, myOrder);
+  };
+
+  static getAssignedOrders = async (req, res) => {
+    const condition = { riderId: req.riderData.id };
+    const orders = await riderGetOrders(order, orderContent, user, condition);
+    if (_.isEmpty(orders)) {
+      return errorResponse(res, statusCodes.notFound, riderOrdersNotFound, null, null);
+    }
+    return successResponse(res, statusCodes.success, ordersFound, null, orders);
   };
 };

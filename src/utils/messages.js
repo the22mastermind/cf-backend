@@ -114,6 +114,7 @@ const messages = {
   adminUpdateUserInvalidStatus: 'User status must be active or deactive',
   userNotRider: 'You must be a rider to use this resource',
   riderTakeOrder: 'Order taken successfully',
+  riderOrdersNotFound: 'No orders assigned to you at the moment. Refresh Open Orders Tab and take any order',
 };
 
 export default messages;
