@@ -21,7 +21,12 @@ const {
   getColumnSum,
   findAllById,
 } = service;
-const { userValidator, validateSubscribe, validatePlaceOrder } = validations;
+const {
+  userValidator,
+  validateSubscribe,
+  validatePlaceOrder,
+  validateFcmToken,
+} = validations;
 const { returnErrorMessages } = miscellaneousHelpers;
 
 const userValidation = async (req, res, next) => {
@@ -87,6 +92,11 @@ const placeOrderValidator = async (req, res, next) => {
   returnErrorMessages(error, res, next);
 };
 
+const fcmTokenValidator = async (req, res, next) => {
+  const { error } = validateFcmToken(req.body);
+  returnErrorMessages(error, res, next);
+};
+
 export default {
   findProductById,
   userValidation,
@@ -96,4 +106,5 @@ export default {
   checkSubscription,
   subscribeValidator,
   placeOrderValidator,
+  fcmTokenValidator,
 };

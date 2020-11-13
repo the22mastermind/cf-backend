@@ -1249,3 +1249,76 @@ describe('RIDER FETCH OPEN ORDERS', () => {
       });
   });
 });
+
+describe('USER SYNC FCM TOKEN', () => {
+  it('Clear all userFcmToken in user model', async () => {
+    await db.sequelize.query('UPDATE users SET "userFcmToken"=\'\'');
+  });
+  it('User login should return 200', (done) => {
+    chai
+      .request(server)
+      .post('/auth/login')
+      .send({
+        identifier: 'denzel@gmail.com',
+        password: 'denzel@1bro',
+      })
+      .end((err, res) => {
+        if (err) done(err);
+        const { token } = res.body;
+        expect(res.status).to.equal(success);
+        expect(token);
+        userToken = token;
+        expect(userToken).to.be.a('string');
+        done();
+      });
+  });
+  it('User sync token with empty token should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/sync')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.userFcmTokenInvalid);
+        done();
+      });
+  });
+  it('User sync token with invalid token should return 400', (done) => {
+    chai
+      .request(server)
+      .patch('/sync')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ userFcmToken: '' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(badRequest);
+        expect(error);
+        expect(error).to.equal(messages.userFcmTokenInvalid);
+        done();
+      });
+  });
+  it('User sync token should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/sync')
+      .set('Authorization', `Bearer ${userToken}`)
+      .send({ userFcmToken: process.env.TEST_CLIENT_FCM })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.userFcmTokenSynced);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('userFcmToken');
+        expect(data.userFcmToken).to.be.a('string');
+        done();
+      });
+  });
+});

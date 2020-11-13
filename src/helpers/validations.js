@@ -208,6 +208,16 @@ const validateUpdateUserStatus = (data) => {
   });
 };
 
+const validateFcmToken = (data) => {
+  const schema = Joi.object({
+    userFcmToken: Joi.string().required().messages(createMessages('string', `${messages.userFcmTokenInvalid}`)),
+  });
+  return schema.validate(data, {
+    abortEarly: false,
+    allowUnknown: false,
+  });
+};
+
 export default {
   payloadValidator,
   adminValidator,
@@ -222,4 +232,5 @@ export default {
   validatePassword,
   validateAddUser,
   validateUpdateUserStatus,
+  validateFcmToken,
 };

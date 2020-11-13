@@ -26,6 +26,7 @@ const {
   userSubscribe,
   vendorsFound,
   vendorsNotFound,
+  userFcmTokenSynced,
 } = messages;
 const {
   saveObj,
@@ -35,6 +36,7 @@ const {
   getAll,
   getSubsByCondition,
   getAllVendors,
+  updateModel,
 } = service;
 const {
   review,
@@ -159,5 +161,13 @@ export default class User {
       return errorResponse(res, statusCodes.notFound, vendorsNotFound, null, null);
     }
     return successResponse(res, statusCodes.success, vendorsFound, null, vendors);
+  };
+
+  static syncFcmToken = async (req, res) => {
+    const { userFcmToken } = req.body;
+    const data = { userFcmToken };
+    const condition = { id: req.userData.id };
+    const updatedData = await updateModel(user, data, condition);
+    return successResponse(res, statusCodes.success, userFcmTokenSynced, null, updatedData);
   };
 };

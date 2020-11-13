@@ -14,6 +14,7 @@ const {
   fetchSubscription,
   userSubscribe,
   fetchAllVendors,
+  syncFcmToken,
 } = user;
 const {
   checkTokenAndUser,
@@ -30,6 +31,7 @@ const {
   checkSubscription,
   subscribeValidator,
   placeOrderValidator,
+  fcmTokenValidator,
 } = userMiddleware;
 const userRoutes = express.Router();
 
@@ -42,5 +44,6 @@ userRoutes.get('/plans', checkTokenAndUser, getPlans);
 userRoutes.get('/subscription', checkTokenAndUser, fetchSubscription);
 userRoutes.post('/plans/:id/subscription', paramsValidation, subscribeValidator, checkTokenAndUser, checkPlan, checkSubscription, userSubscribe);
 userRoutes.get('/vendors', checkTokenAndUser, fetchAllVendors);
+userRoutes.patch('/sync', fcmTokenValidator, checkTokenAndUser, syncFcmToken);
 
 export default userRoutes;
