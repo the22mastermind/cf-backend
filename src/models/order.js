@@ -24,6 +24,8 @@ export default (sequelize, DataTypes) => {
         CANCELED,
       ),
     },
+    userComments: { type: DataTypes.STRING, allowNull: true },
+    riderComments: { type: DataTypes.STRING, allowNull: true },
   }, {});
   order.associate = (models) => {
     order.belongsTo(models.user, {

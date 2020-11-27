@@ -5,6 +5,7 @@ import responseHandler from '../helpers/responseHandler';
 import service from '../services/services';
 import models from '../models';
 import notifyHandler from '../helpers/notify';
+import notificationMessageHandler from '../helpers/notificationMessage';
 
 const { successResponse, errorResponse } = responseHandler;
 const {
@@ -20,6 +21,7 @@ const {
   orderContent,
 } = models;
 const { orderStatusUpdateNotification } = notifyHandler;
+const { notificationMessageBuilder } = notificationMessageHandler;
 
 export default class User {
   static getOpenOrders = async (req, res) => {
@@ -31,21 +33,20 @@ export default class User {
     return successResponse(res, statusCodes.success, ordersFound, null, orders);
   };
 
-  static takeOrder = async (req, res) => {
-    const { id } = req.params;
+  static riderUpdateOrder = async (req, res) => {
     const { status } = req.body;
-    const orderData = await findById(order, id);
     const riderId = req.riderData.id;
     const data = { riderId, status };
-    const condition = { id: orderData.dataValues.id };
+    const condition = { id: req.orderData.id };
     const myOrder = await updateModel(order, data, condition);
-    const { userId } = orderData.dataValues;
+    const { userId } = req.orderData;
     const clientData = await findById(user, userId);
     const { userFcmToken } = clientData.dataValues;
-    const notificationData = {
-      title: `Your order #${orderData.dataValues.id} has been accepted!`,
-      body: `Hi, I'm ${req.riderData.name}. I will be delivering your order today.`,
+    const payload = {
+      orderId: req.orderData.id,
+      riderName: req.riderData.name,
     };
+    const notificationData = await notificationMessageBuilder(status, payload);
     await orderStatusUpdateNotification(userFcmToken, notificationData);
     return successResponse(res, statusCodes.success, riderTakeOrder, null, myOrder);
   };
