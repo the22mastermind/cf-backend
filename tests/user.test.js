@@ -1248,6 +1248,59 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         done();
       });
   });
+  it('Rider <on the way> should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`/rider/orders/${orderId}`)
+      .set('Authorization', `Bearer ${riderToken}`)
+      .send({ status: 'ontheway' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.riderTakeOrder);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('ontheway');
+        done();
+      });
+  });
+  it('Rider <arrived> should return 200', (done) => {
+    chai
+      .request(server)
+      .patch(`/rider/orders/${orderId}`)
+      .set('Authorization', `Bearer ${riderToken}`)
+      .send({ status: 'arrived' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.riderTakeOrder);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('arrived');
+        done();
+      });
+  });
+  it('Rider <arrived> should return 409', (done) => {
+    chai
+      .request(server)
+      .patch(`/rider/orders/${orderId}`)
+      .set('Authorization', `Bearer ${riderToken}`)
+      .send({ status: 'arrived' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(conflict);
+        expect(error);
+        expect(error).to.equal(messages.orderUpdateStatusConflict);
+        done();
+      });
+  });
 });
 
 describe('USER SYNC FCM TOKEN', () => {

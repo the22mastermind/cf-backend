@@ -13,6 +13,7 @@ const {
   review,
   plan,
   subscription,
+  order,
 } = models;
 const { errorResponse } = responseHandler;
 const {
@@ -97,6 +98,17 @@ const fcmTokenValidator = async (req, res, next) => {
   returnErrorMessages(error, res, next);
 };
 
+const checkOrderStatus = async (req, res, next) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  const orderData = await findAllById(order, id);
+  if (orderData.dataValues.status === status) {
+    return errorResponse(res, statusCodes.conflict, messages.orderUpdateStatusConflict);
+  }
+  req.orderData = orderData.dataValues;
+  return next();
+};
+
 export default {
   findProductById,
   userValidation,
@@ -107,4 +119,5 @@ export default {
   subscribeValidator,
   placeOrderValidator,
   fcmTokenValidator,
+  checkOrderStatus,
 };
