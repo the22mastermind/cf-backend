@@ -1375,3 +1375,86 @@ describe('USER SYNC FCM TOKEN', () => {
       });
   });
 });
+
+describe('USER FETCH SINGLE ORDER', () => {
+  it('User fetch unexistant single order should return 404', (done) => {
+    chai
+      .request(server)
+      .get('/order/9999')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { error } = res.body;
+        expect(res.status).to.equal(notFound);
+        expect(error);
+        expect(error).to.equal(messages.orderNotFound);
+        done();
+      });
+  });
+  it('User fetch single order should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/order/6')
+      .set('Authorization', `Bearer ${userToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.orderFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('user');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0]).to.haveOwnProperty('orderContents');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].id).to.equal(6);
+        done();
+      });
+  });
+  it('Rider fetch single order should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/order/6')
+      .set('Authorization', `Bearer ${riderToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.orderFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('user');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0]).to.haveOwnProperty('orderContents');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].id).to.equal(6);
+        done();
+      });
+  });
+  it('Admin fetch single order should return 200', (done) => {
+    chai
+      .request(server)
+      .get('/order/5')
+      .set('Authorization', `Bearer ${adminToken}`)
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.orderFound);
+        expect(data);
+        expect(data).to.be.a('array');
+        expect(data[0]).to.haveOwnProperty('id');
+        expect(data[0]).to.haveOwnProperty('user');
+        expect(data[0].user).to.be.a('object');
+        expect(data[0]).to.haveOwnProperty('orderContents');
+        expect(data[0].orderContents).to.be.a('array');
+        expect(data[0].id).to.equal(5);
+        done();
+      });
+  });
+});

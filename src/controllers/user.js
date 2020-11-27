@@ -27,6 +27,7 @@ const {
   vendorsFound,
   vendorsNotFound,
   userFcmTokenSynced,
+  orderFound,
 } = messages;
 const {
   saveObj,
@@ -169,5 +170,10 @@ export default class User {
     const condition = { id: req.userData.id };
     const updatedData = await updateModel(user, data, condition);
     return successResponse(res, statusCodes.success, userFcmTokenSynced, null, updatedData);
+  };
+
+  static getSingleOrder = async (req, res) => {
+    const data = req.orderData;
+    return successResponse(res, statusCodes.success, orderFound, null, data);
   };
 };

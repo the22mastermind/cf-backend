@@ -118,6 +118,7 @@ const messages = {
   userFcmTokenSynced: 'Token synced successfully',
   userFcmTokenInvalid: 'Please provide a valid token',
   userFcmTokenEmpty: 'userFcmToken is required',
+  orderFound: 'Order retrieved successfully',
 };
 
 export default messages;

@@ -104,6 +104,7 @@ const checkOrder = async (req, res, next) => {
   if (orderData.dataValues.status === status) {
     return errorResponse(res, statusCodes.conflict, messages.orderUpdateStatusConflict);
   }
+  req.orderData = orderData.dataValues;
   return next();
 };
 
