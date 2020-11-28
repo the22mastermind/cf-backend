@@ -5,6 +5,9 @@ checks:
       threshold: 5
   similar-code:
     enabled: false
+  method-complexity:
+    config:
+      threshold: 6
 exclude_patterns:
     - "src/seeders/"
     - "tests/"

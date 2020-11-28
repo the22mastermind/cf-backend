@@ -1208,7 +1208,7 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         const { message, data } = res.body;
         expect(res.status).to.equal(success);
         expect(message);
-        expect(message).to.equal(messages.riderTakeOrder);
+        expect(message).to.equal(messages.riderUpdateOrder);
         expect(data);
         expect(data).to.be.a('object');
         expect(data).to.haveOwnProperty('status');
@@ -1259,7 +1259,7 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         const { message, data } = res.body;
         expect(res.status).to.equal(success);
         expect(message);
-        expect(message).to.equal(messages.riderTakeOrder);
+        expect(message).to.equal(messages.riderUpdateOrder);
         expect(data);
         expect(data).to.be.a('object');
         expect(data).to.haveOwnProperty('status');
@@ -1278,7 +1278,7 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         const { message, data } = res.body;
         expect(res.status).to.equal(success);
         expect(message);
-        expect(message).to.equal(messages.riderTakeOrder);
+        expect(message).to.equal(messages.riderUpdateOrder);
         expect(data);
         expect(data).to.be.a('object');
         expect(data).to.haveOwnProperty('status');
@@ -1298,6 +1298,25 @@ describe('RIDER FETCH OPEN ORDERS', () => {
         expect(res.status).to.equal(conflict);
         expect(error);
         expect(error).to.equal(messages.orderUpdateStatusConflict);
+        done();
+      });
+  });
+  it('Rider <completed> should return 200', (done) => {
+    chai
+      .request(server)
+      .patch('/rider/orders/5')
+      .set('Authorization', `Bearer ${riderToken}`)
+      .send({ status: 'completed' })
+      .end((err, res) => {
+        if (err) done(err);
+        const { message, data } = res.body;
+        expect(res.status).to.equal(success);
+        expect(message);
+        expect(message).to.equal(messages.riderUpdateOrder);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.status).to.equal('completed');
         done();
       });
   });
