@@ -21,6 +21,12 @@ const notificationMessageBuilder = async (messageType, data) => {
       body: `Rider ${riderName} has arrived at your location. Enjoy!`,
     };
   }
+  if (messageType === 'completed') {
+    notificationData = {
+      title: 'Thank you!',
+      body: 'Thank you for ordering with Chow Food! See you soon for another order',
+    };
+  }
   return notificationData;
 };
 

@@ -113,7 +113,7 @@ const messages = {
   adminUpdateUserStatus: 'User status updated successfully',
   adminUpdateUserInvalidStatus: 'User status must be active or deactive',
   userNotRider: 'You must be a rider to use this resource',
-  riderTakeOrder: 'Order taken successfully',
+  riderUpdateOrder: 'Order updated successfully',
   riderOrdersNotFound: 'No orders assigned to you at the moment. Refresh Open Orders Tab and take any order',
   userFcmTokenSynced: 'Token synced successfully',
   userFcmTokenInvalid: 'Please provide a valid token',

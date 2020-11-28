@@ -11,7 +11,7 @@ const { successResponse, errorResponse } = responseHandler;
 const {
   ordersFound,
   ordersNotFound,
-  riderTakeOrder,
+  riderUpdateOrder,
   riderOrdersNotFound,
 } = messages;
 const { riderGetOrders, findById, updateModel } = service;
@@ -48,7 +48,7 @@ export default class User {
     };
     const notificationData = await notificationMessageBuilder(status, payload);
     await orderStatusUpdateNotification(userFcmToken, notificationData);
-    return successResponse(res, statusCodes.success, riderTakeOrder, null, myOrder);
+    return successResponse(res, statusCodes.success, riderUpdateOrder, null, myOrder);
   };
 
   static getAssignedOrders = async (req, res) => {
