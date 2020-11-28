@@ -14,6 +14,8 @@ const {
   plan,
   subscription,
   order,
+  orderContent,
+  user,
 } = models;
 const { errorResponse } = responseHandler;
 const {
@@ -21,6 +23,7 @@ const {
   findByCondition,
   getColumnSum,
   findAllById,
+  riderGetOrders,
 } = service;
 const {
   userValidator,
@@ -98,14 +101,14 @@ const fcmTokenValidator = async (req, res, next) => {
   returnErrorMessages(error, res, next);
 };
 
-const checkOrderStatus = async (req, res, next) => {
+const fetchOrderById = async (req, res, next) => {
   const { id } = req.params;
-  const { status } = req.body;
-  const orderData = await findAllById(order, id);
-  if (orderData.dataValues.status === status) {
-    return errorResponse(res, statusCodes.conflict, messages.orderUpdateStatusConflict);
+  const condition = { id };
+  const orderData = await riderGetOrders(order, orderContent, user, condition);
+  if (_.isEmpty(orderData)) {
+    return errorResponse(res, statusCodes.notFound, messages.orderNotFound);
   }
-  req.orderData = orderData.dataValues;
+  req.orderData = orderData;
   return next();
 };
 
@@ -119,5 +122,5 @@ export default {
   subscribeValidator,
   placeOrderValidator,
   fcmTokenValidator,
-  checkOrderStatus,
+  fetchOrderById,
 };
