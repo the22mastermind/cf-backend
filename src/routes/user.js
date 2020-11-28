@@ -27,6 +27,8 @@ const {
   findProductById,
   userValidation,
   findReviews,
+} = userMiddleware;
+const {
   reviewExists,
   checkPlan,
   checkSubscription,
