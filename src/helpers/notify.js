@@ -20,9 +20,7 @@ const orderStatusUpdateNotification = async (token, payload) => {
         body: payload.body,
       },
       android: {
-        notification: {
-          sound: 'default',
-        },
+        notification: { sound: 'default' },
       },
       apns: {
         payload: { aps: { sound: 'default' } },
