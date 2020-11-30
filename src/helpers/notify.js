@@ -8,15 +8,26 @@ const sendNotificationToClient = async (tokens, data) => {
 };
 
 const orderStatusUpdateNotification = async (token, payload) => {
-  const { results } = await messaging.sendToDevice(
-    token,
+  const dryRun = false;
+  const { results } = await messaging.send(
     {
       notification: {
         title: payload.title,
         body: payload.body,
       },
+      data: {
+        title: payload.title,
+        body: payload.body,
+      },
+      android: {
+        notification: { sound: 'default' },
+      },
+      apns: {
+        payload: { aps: { sound: 'default' } },
+      },
+      token,
     },
-    { contentAvailable: true, priority: 'high' },
+    dryRun,
   );
   return results;
 };
