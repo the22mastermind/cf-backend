@@ -2,7 +2,7 @@ import firebaseInit from '../config/firebaseInit';
 
 const { messaging } = firebaseInit;
 
-const sendNotificationToClient = async (tokens, data) => {
+const notifyAdmin = async (tokens, data) => {
   const { responses } = await messaging.sendMulticast({ tokens, data });
   return responses;
 };
@@ -33,6 +33,6 @@ const orderStatusUpdateNotification = async (token, payload) => {
 };
 
 export default {
-  sendNotificationToClient,
+  notifyAdmin,
   orderStatusUpdateNotification,
 };

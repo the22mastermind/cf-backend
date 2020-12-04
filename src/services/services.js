@@ -176,6 +176,24 @@ const riderGetOrders = async (model, orderContent, user, condition) => {
   return data;
 };
 
+const fetchOrder = async (model, orderContent, user, rider, condition) => {
+  const data = await model.findAll({
+    where: condition,
+    order: [
+      ['id', 'DESC'],
+    ],
+    include: [
+      { model: orderContent },
+      {
+        model: user,
+        attributes: ['id', 'firstName', 'lastName', 'phone', 'address'],
+      },
+      { model: rider },
+    ],
+  });
+  return data;
+};
+
 export default {
   deleteItem,
   findById,
@@ -195,4 +213,5 @@ export default {
   getAllVendors,
   getAllUsers,
   riderGetOrders,
+  fetchOrder,
 };

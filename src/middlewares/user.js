@@ -16,6 +16,7 @@ const {
   order,
   orderContent,
   user,
+  rider,
 } = models;
 const { errorResponse } = responseHandler;
 const {
@@ -23,7 +24,7 @@ const {
   findByCondition,
   getColumnSum,
   findAllById,
-  riderGetOrders,
+  fetchOrder,
 } = service;
 const {
   userValidator,
@@ -104,7 +105,7 @@ const fcmTokenValidator = async (req, res, next) => {
 const fetchOrderById = async (req, res, next) => {
   const { id } = req.params;
   const condition = { id };
-  const orderData = await riderGetOrders(order, orderContent, user, condition);
+  const orderData = await fetchOrder(order, orderContent, user, rider, condition);
   if (_.isEmpty(orderData)) {
     return errorResponse(res, statusCodes.notFound, messages.orderNotFound);
   }
