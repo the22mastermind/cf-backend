@@ -399,7 +399,7 @@ describe('USER PLACE ORDER', () => {
         expect(message);
         expect(message).to.equal(messages.orderPlaced);
         expect(data);
-        expect(data).to.be('object');
+        expect(data).to.be.a('object');
         expect(data).to.haveOwnProperty('id');
         expect(data).to.haveOwnProperty('userId');
         expect(data).to.haveOwnProperty('status');
