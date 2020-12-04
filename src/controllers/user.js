@@ -51,7 +51,7 @@ const {
   vendor,
 } = models;
 const { computeAverage, orderItemsParser } = miscellaneousHandlers;
-const { sendNotificationToClient } = notifyHandler;
+const { notifyAdmin } = notifyHandler;
 
 export default class User {
   static getSingleProduct = async (req, res) => {
@@ -109,8 +109,8 @@ export default class User {
       title: 'New Order Alert!',
       body: `Order total: ${orderData.total} from: ${req.userData.firstName} ${req.userData.lastName}`,
     };
-    await sendNotificationToClient(tokens, notificationData);
-    return successResponse(res, statusCodes.created, orderPlaced, null, null);
+    await notifyAdmin(tokens, notificationData);
+    return successResponse(res, statusCodes.created, orderPlaced, null, savedOrder);
   };
 
   static getOrders = async (req, res) => {

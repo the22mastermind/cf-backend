@@ -394,10 +394,18 @@ describe('USER PLACE ORDER', () => {
       .send(userSample.validOrder)
       .end((err, res) => {
         if (err) done(err);
-        const { message } = res.body;
+        const { message, data } = res.body;
         expect(res.status).to.equal(created);
         expect(message);
         expect(message).to.equal(messages.orderPlaced);
+        expect(data);
+        expect(data).to.be.a('object');
+        expect(data).to.haveOwnProperty('id');
+        expect(data).to.haveOwnProperty('userId');
+        expect(data).to.haveOwnProperty('status');
+        expect(data.id).to.be.a('number');
+        expect(data.userId).to.be.a('number');
+        expect(data.status).to.equal('placed');
         done();
       });
   });
@@ -1429,6 +1437,7 @@ describe('USER FETCH SINGLE ORDER', () => {
         expect(data[0]).to.haveOwnProperty('orderContents');
         expect(data[0].orderContents).to.be.a('array');
         expect(data[0].id).to.equal(6);
+        expect(data[0]).to.haveOwnProperty('rider');
         done();
       });
   });
@@ -1451,6 +1460,7 @@ describe('USER FETCH SINGLE ORDER', () => {
         expect(data[0]).to.haveOwnProperty('orderContents');
         expect(data[0].orderContents).to.be.a('array');
         expect(data[0].id).to.equal(6);
+        expect(data[0]).to.haveOwnProperty('rider');
         done();
       });
   });
@@ -1473,6 +1483,7 @@ describe('USER FETCH SINGLE ORDER', () => {
         expect(data[0]).to.haveOwnProperty('orderContents');
         expect(data[0].orderContents).to.be.a('array');
         expect(data[0].id).to.equal(5);
+        expect(data[0]).to.haveOwnProperty('rider');
         done();
       });
   });
